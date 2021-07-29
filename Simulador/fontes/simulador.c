@@ -11,9 +11,7 @@ Do todos os comandos...
 6) E o PC ????????
 */
 
-#define TAMANHO_PALAVRA 16
 #define TAMANHO_MEMORIA 32768
-#define MAX_VAL 65535
 
 // Estados do Processador
 #define STATE_RESET 0
@@ -51,52 +49,20 @@ Do todos os comandos...
 
 // Opcodes das Instrucoes:
 // Data Manipulation:
-#define LOAD 48       // "110000"; -- LOAD Rx END  -- Rx <- M[END]  Format: < inst(6) | Rx(3) | xxxxxxx >  + 16bit END
-#define STORE 49      // "110001"; -- STORE END Rx -- M[END] <- Rx  Format: < inst(6) | Rx(3) | xxxxxxx >  + 16bit END
 #define LOADIMED 56   // "111000"; -- LOAD Rx Nr  (b0=0)   -- Rx <- Nr    ou   Load SP Nr (b0=1)  -- SP <- Nr    Format: < inst(6) | Rx(3) | xxxxxxb0 >  + 16bit Numero
 #define LOADINDEX 60  // "111100"; -- LOAD Rx Ry   -- Rx <- M[Ry]	Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
 #define STOREINDEX 61 // "111101"; -- STORE Rx Ry  -- M[Rx] <- Ry	Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
-#define MOV	51        // "110011"; -- MOV Rx Ry    -- Rx <- Ry	  	Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
 
 
-// I/O Instructions:
-#define OUTCHAR	50  // "110010"; -- OUTCHAR Rx Ry -- Video[Ry] <- Char(Rx)								Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
-#define INCHAR 53   // "110101"; -- INCHAR Rx     -- Rx[7..0] <- KeyPressed	Rx[15..8] <- 0´s  Format: < inst(6) | Rx(3) | xxxxxxx >
-
-
-// Aritmethic Instructions(All should begin wiht "10"):
-#define ARITH 2
-#define ADD 32      // "100000"; -- ADD Rx Ry Rz / ADDC Rx Ry Rz  	-- Rx <- Ry + Rz / Rx <- Ry + Rz + C  -- b0=Carry	  	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| C >
-#define SUB 33      // "100001"; -- SUB Rx Ry Rz / SUBC Rx Ry Rz  	-- Rx <- Ry - Rz / Rx <- Ry - Rz + C  -- b0=Carry	  	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| C >
-#define MULT 34     // "100010"; -- MUL Rx Ry Rz  / MUL Rx Ry Rz	-- Rx <- Ry * Rz / Rx <- Ry * Rz + C  -- b0=Carry		Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| C >
-#define DIV	35      // "100011"; -- DIV Rx Ry Rz 			-- Rx <- Ry / Rz / Rx <- Ry / Rz + C  -- b0=Carry		Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| C >
-#define INC	36      // "100100"; -- INC Rx / DEC Rx                 		-- Rx <- Rx + 1 / Rx <- Rx - 1  -- b6= INC/DEC : 0/1	Format: < inst(6) | Rx(3) | b6 | xxxxxx >
 #define LMOD 37     // "100101"; -- MOD Rx Ry Rz   			-- Rx <- Ry MOD Rz 	  	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
 
 
 // Logic Instructions (All should begin wiht "01"):
-#define LOGIC 1
 #define LAND 18     // "010010"; -- AND Rx Ry Rz  	-- Rz <- Rx AND Ry	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
 #define LOR 19      // "010011"; -- OR Rx Ry Rz   	-- Rz <- Rx OR Ry		Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
 #define LXOR 20     // "010100"; -- XOR Rx Ry Rz  	-- Rz <- Rx XOR Ry	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
 #define LNOT 21     // "010101"; -- NOT Rx Ry       	-- Rx <- NOT(Ry)		Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
-#define SHIFT 16    // "010000"; -- SHIFTL0 Rx,n / SHIFTL1 Rx,n / SHIFTR0 Rx,n / SHIFTR1 Rx,n / ROTL Rx,n / ROTR Rx,n
-//           -- Format: < inst(6) | Rx(3) |  b6 b5 b4 | nnnn >
-#define CMP 22      // "010110"; -- CMP Rx Ry  		-- Compare Rx and Ry and set FR :  FL = <...|over|carry|zero|equal|lesser|greater>	  Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
 
-// FLOW CONTROL Instructions:
-#define JMP 2       // "000010"; -- JMP END    -- PC <- 16bit END 							  : b9-b6 = COND		Format: < inst(6) | COND(4) | xxxxxx >   + 16bit END
-#define CALL 3      // "000011"; -- CALL END   -- M[SP] <- PC | SP-- | PC <- 16bit END   : b9-b6 = COND	  	Format: < inst(6) | COND(4) | xxxxxx >   + 16bit END
-#define RTS	4       // "000100"; -- RTS        -- SP++ | PC <- M[SP] | b6=Rx/FR: 1/0	  							Format: < inst(6) | xxxxxxxxxx >
-#define PUSH 5      // "000101"; -- PUSH Rx / PUSH FR  -- M[SP] <- Rx / M[SP] <- FR | SP-- 	  			  : b6=Rx/FR: 0/1		Format: < inst(6) | Rx(3) | b6 | xxxxxx >
-#define POP	6       // "000110"; -- POP Rx  / POP FR   -- SP++ | Rx <- M[SP]  / FR <- M[SP]	  			  : b6=Rx/FR: 0/1		Format: < inst(6) | Rx(3) | b6 | xxxxxx >
-
-
-// Control Instructions:
-#define NOP	0       // "000000"; -- NOP            -- Do Nothing	 						Format: < inst(6) | xxxxxxxxxx >
-#define HALT 15     // "001111"; -- HALT           -- Stop Here								Format: < inst(6) | xxxxxxxxxx >
-#define SETC 8      // "001000"; -- CLEARC / SETC  -- Set/Clear Carry: b9 = 1-set; 0-clear	Format: < inst(6) | b9 | xxxxxxxxx >
-#define BREAKP 14   // "001110"; -- BREAKP         -- Break Point: Pausa execussao			Format: < inst(6) | xxxxxxxxxx >
 
 // Flag register
 #define NEGATIVE 9
@@ -121,13 +87,11 @@ Do todos os comandos...
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "operacao.h"
+#include "ula.h"
+
 unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
 int reg[8]; // 8 registradores
-
-typedef struct _resultadoUla{
-	unsigned int result;
-	unsigned int auxFR;
-} ResultadoUla;
 
 
 //  Processa dados do Arquivo CPU.MIF
@@ -136,17 +100,6 @@ void le_arquivo(void);
 //processa uma linha completa e retorna o número codificado
 int processa_linha(char* linha); 
 
-// Funcao que separa somente o pedaco de interesse do IR;
-int pega_pedaco(int ir, int a, int b); 
-
-// Rotate Left 16 bits
-unsigned int _rotl(const unsigned int value, int shift);
-
-// Rotate Right 16 bits
-unsigned int _rotr(const unsigned int value, int shift);
-
-// ULA
-ResultadoUla ULA(unsigned int x, unsigned int y, unsigned int OP, int carry);
 
 int kbhit(void)
 {
@@ -192,7 +145,7 @@ int main()
 	unsigned char state=0; // reset
 	int OP=0;  // ULA
 	int TECLADO;
-	ResultadoUla resultadoUla;
+	resultado_ula_t resultadoUla;
 
 	le_arquivo();
 
@@ -429,9 +382,9 @@ loop:
 						case 3: reg[rx] = ~((~(reg[rx]) >> pega_pedaco(IR,3,0)));   break;
 						default:
 								if(pega_pedaco(IR,6,5)==2) // ROTATE LEFT
-									reg[rx] = _rotl(reg[rx],pega_pedaco(IR,3,0));
+									reg[rx] = rotaciona_esquerda(reg[rx],pega_pedaco(IR,3,0));
 								else
-									reg[rx] = _rotr(reg[rx],pega_pedaco(IR,3,0)); 
+									reg[rx] = rotaciona_direita(reg[rx],pega_pedaco(IR,3,0)); 
 								break;
 					}
 					FR[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
@@ -635,10 +588,10 @@ loop:
 	else M3 = reg[selM3]; 
 
 	// Operacao da ULA
-	resultadoUla = ULA(M3, M4, OP, carry);
+	resultadoUla = ula(M3, M4, FR[CARRY], carry, OP);
 
 	// Selecao do Mux2
-	if      (selM2 == sULA) M2 = resultadoUla.result;
+	if      (selM2 == sULA) M2 = resultadoUla.valor;
 	else if (selM2 == sDATA_OUT) M2 = DATA_OUT;
 	else if (selM2 == sM4)  M2 = M4;
 	//else if (selM2 == sTECLADO) M2 = TECLADO;// TODO: selM2 com teclado
@@ -649,7 +602,7 @@ loop:
 	else if (selM5 == sM3) M5 = M3;
 
 	// Selecao do Mux6
-	if (selM6 == sULA) M6 = resultadoUla.auxFR;// TODO: Talvez o auxFR deva ser o valor do FR //**Sempre recebe flags da ULA
+	if (selM6 == sULA) M6 = resultadoUla.fr;// TODO: Talvez o auxFR deva ser o valor do FR //**Sempre recebe flags da ULA
 	else if (selM6 == sDATA_OUT) M6 = DATA_OUT; //** A menos que seja POP FR, quando recebe da Memoria
 
 	goto loop;
@@ -732,157 +685,4 @@ int processa_linha(char* linha) {
 	}
 
 	return valor;
-}
-
-// Funcao que separa somente o pedaco de interesse do IR;
-int pega_pedaco(int ir, int a, int b) {
-	int pedaco=0;
-
-	// Separa somente o pedaco de interesse;
-
-	/* Essa operação retira o numero do registrador entre o a-b bit
-	   da instrução, realizando um right-shift de b posições
-	   e aplicando uma máscara de n-bits, onde n = nr. 1's entre a e b
-	   Obs.:    & - AND
-	   >> - right-shift
-
-	   ex.: Rx = 0x0007 & IR >> 7;
-	   */
-	pedaco = ((pow(2,(a-b+1)))-1);
-	pedaco = pedaco & ir >> b;
-
-	return pedaco;
-}
-
-// Rotate Left 16 bits
-unsigned int _rotl(const unsigned int value, int shift) {
-	if ((shift &= 16*8 - 1) == 0)
-		return value;
-	return (value << shift) | (value >> (16*8 - shift));
-}
-
-// Rotate Right 16 bits
-unsigned int _rotr(const unsigned int value, int shift) {
-	if ((shift &= 16*8 - 1) == 0)
-		return value;
-	return (value >> shift) | (value << (16*8 - shift));
-}
-
-// ULA
-ResultadoUla ULA(unsigned int x, unsigned int y, unsigned int OP, int carry) {
-	unsigned int auxFRbits[16]={0};// TODO ficar 0 quando der reset? Nao entendi o auxFR
-	unsigned int result = 0;
-
-	//printf("OP:%d - arith:%d add:%d\n", OP, pega_pedaco(OP, 5, 4), pega_pedaco(OP, 3, 0));
-	switch(pega_pedaco(OP, 5, 4)) {
-		case ARITH:
-			switch(OP) {
-				case ADD:
-					if(carry==1)
-						result = x+y+FR[CARRY];
-					else
-						result = x+y;
-					//MAX_VAL = 1111 1111 1111 1111
-					if(result > MAX_VAL){// Carry
-						auxFRbits[CARRY] = 1;
-						result -= MAX_VAL;
-					}else 
-						auxFRbits[CARRY] = 0;
-
-					break;	
-				case SUB:
-					result = x-y;
-
-					if(result < 0)// Negative
-						auxFRbits[NEGATIVE] = 1;
-					else 
-						auxFRbits[NEGATIVE] = 0;
-					break;	
-				case MULT:
-					result = x*y;
-
-					if(result > MAX_VAL)// Arithmetic overflow
-						auxFRbits[ARITHMETIC_OVERFLOW] = 1;
-					else 
-						auxFRbits[ARITHMETIC_OVERFLOW] = 0;
-					break;	
-				case DIV:
-					if(y==0) {
-						result = 0;
-						auxFRbits[DIV_BY_ZERO] = 1;
-					}else {
-						result = x/y;
-						auxFRbits[DIV_BY_ZERO] = 0;
-					}
-					break;	
-				case LMOD:
-					if(y==0) {
-						result = 0;
-						auxFRbits[DIV_BY_ZERO] = 1;
-					}else {
-						result = x%y;
-						auxFRbits[DIV_BY_ZERO] = 0;
-					}
-					break;	
-				default:
-					result = x;
-			}
-			if(result==0)
-				auxFRbits[ZERO] = 1;
-			else
-				auxFRbits[ZERO] = 0;
-
-			break;
-		case LOGIC:
-			if(OP==CMP)
-			{
-				result = x;
-				if(x>y){
-					auxFRbits[GREATER] = 1;
-					auxFRbits[LESSER] = 0;
-					auxFRbits[EQUAL] = 0;
-				}else if(x<y){
-					auxFRbits[GREATER] = 0;
-					auxFRbits[LESSER] = 1;
-					auxFRbits[EQUAL] = 0;
-				}else if(x==y){
-					auxFRbits[GREATER] = 0;
-					auxFRbits[LESSER] = 0;
-					auxFRbits[EQUAL] = 1;
-				}
-			}else{
-				switch(OP) {
-					case LAND:
-						result = x & y;
-						break;
-					case LXOR:
-						result = x ^ y;
-						break;
-					case LOR:
-						result = x | y;
-						break;
-					case LNOT:
-						// ~x -> 000000101 para 111111010
-						// & MAX_VAL -> para garantir que vai ficar menor igual que 65535
-						result = ~x & MAX_VAL;
-						break;
-					default:
-						result = x;
-				}
-				if(result==0)
-					auxFRbits[ZERO] = 1;
-				else
-					auxFRbits[ZERO] = 0;
-			}
-			break;
-	}
-
-	unsigned int auxFR = 0;
-	for(int i=16; i--; )        
-		auxFR = auxFR + (int) (auxFRbits[i] * (pow(2.0,i))); 
-
-	ResultadoUla resultadoUla;
-	resultadoUla.result = result;
-	resultadoUla.auxFR = auxFR;
-	return resultadoUla;
 }
