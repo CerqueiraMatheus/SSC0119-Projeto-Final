@@ -5,17 +5,17 @@
 #include "ula.h"
 
 
+enum _TipoOperacao {
+    ARITMETICA = 1,
+    LOGICA
+};
+
+
+static unsigned int _VALOR_MAXIMO = 0xffff;
+
+
 static resultado_ula_t _operacao_aritmetica(unsigned int x, unsigned int y, int carry, bool tem_carry, operacao_t operacao);
 static resultado_ula_t _operacao_logica(unsigned int x, unsigned int y, operacao_t operacao);
-
-
-static unsigned int VALOR_MAXIMO = 0xffff;
-
-
-enum TipoOperacao {
-    ARITMETICA = 1,
-    LOGICA = 2
-};
 
 
 resultado_ula_t ula(unsigned int x, unsigned int y, int carry, bool tem_carry, operacao_t operacao) {
@@ -30,20 +30,20 @@ resultado_ula_t ula(unsigned int x, unsigned int y, int carry, bool tem_carry, o
     return (resultado_ula_t) {.valor = 0, .fr = 0};
 }
 
-unsigned int rotaciona_esquerda(unsigned int valor, int shift) {
+unsigned int rotaciona_esquerda(unsigned int bits, int shift) {
 	if ((shift &= TAMANHO_PALAVRA * 8 - 1) == 0) {
-		return valor;
+		return bits;
     }
     
-	return (valor << shift) | (valor >> (TAMANHO_PALAVRA * 8 - shift));
+	return (bits << shift) | (bits >> (TAMANHO_PALAVRA * 8 - shift));
 }
 
-unsigned int rotaciona_direita(unsigned int valor, int shift) {
+unsigned int rotaciona_direita(unsigned int bits, int shift) {
 	if ((shift &= TAMANHO_PALAVRA * 8 - 1) == 0) {
-		return valor;
+		return bits;
     }
     
-	return (valor >> shift) | (valor << (TAMANHO_PALAVRA * 8 - shift));
+	return (bits >> shift) | (bits << (TAMANHO_PALAVRA * 8 - shift));
 }
 
 
@@ -54,9 +54,9 @@ static resultado_ula_t _operacao_aritmetica(unsigned int x, unsigned int y, int 
     switch(operacao) {
         case ADD:
             valor = tem_carry ? x + y + carry : x + y;
-            if (valor > VALOR_MAXIMO) {
+            if (valor > _VALOR_MAXIMO) {
                 fr[CARRY] = true;
-                valor -= VALOR_MAXIMO;
+                valor -= _VALOR_MAXIMO;
             }
             else {
                 fr[CARRY] = false;
@@ -70,7 +70,7 @@ static resultado_ula_t _operacao_aritmetica(unsigned int x, unsigned int y, int 
         
         case MULT:
             valor = x * y;
-            fr[OVERFLOW_ARITMETICO] = valor > VALOR_MAXIMO;
+            fr[OVERFLOW_ARITMETICO] = valor > _VALOR_MAXIMO;
             break;
         
         case DIV:
@@ -129,7 +129,7 @@ static resultado_ula_t _operacao_logica(unsigned int x, unsigned int y, operacao
                 break;
             
             case NOT:
-                valor = ~x & VALOR_MAXIMO;
+                valor = ~x & _VALOR_MAXIMO;
                 break;
             
             default:

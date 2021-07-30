@@ -52,7 +52,7 @@ typedef enum Operacao {
 operacao_t;
 
 
-int pega_pedaco(int bits, int mais_significativo, int menos_significativo);
+unsigned int pega_pedaco(unsigned int bits, int mais_significativo, int menos_significativo);
 
 
 #endif // OPERACAO_H

@@ -11,8 +11,6 @@ Do todos os comandos...
 6) E o PC ????????
 */
 
-#define TAMANHO_MEMORIA 32768
-
 // Estados do Processador
 #define STATE_RESET 0
 #define STATE_FETCH 1
@@ -88,18 +86,11 @@ Do todos os comandos...
 #include <fcntl.h>
 
 #include "operacao.h"
+#include "memoria.h"
 #include "ula.h"
 
 unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
 int reg[8]; // 8 registradores
-
-
-//  Processa dados do Arquivo CPU.MIF
-void le_arquivo(void);
-
-//processa uma linha completa e retorna o número codificado
-int processa_linha(char* linha); 
-
 
 int kbhit(void)
 {
@@ -147,7 +138,7 @@ int main()
 	int TECLADO;
 	resultado_ula_t resultadoUla;
 
-	le_arquivo();
+	le_arquivo_memoria(MEMORY);
 
 inicio:
 	printf("PROCESSADOR ICMC  - Menu:\n");
@@ -609,80 +600,4 @@ loop:
 
 fim:
 	return 0;
-}
-
-//  Processa dados do Arquivo CPU.MIF
-void le_arquivo(void){
-	FILE *stream;   // Declara ponteiro para o arquivo
-	int i, j;
-	int processando = 0; // Flag para varreo o arquivo CPURAM.mif e tirar o cabecalho
-
-	if ( (stream = fopen("cpuram.mif","r")) == NULL)  // Abre o arquivo para leitura
-	{
-		printf("Error: File not OPEN!");
-		exit(1);
-	}
-
-	char linha[110];
-	j = 0;
-
-	while (fscanf(stream,"%s", linha)!=EOF)   // Le linha por linha ate' o final do arquivo: eof = end of file !!
-	{
-		char letra[2] = "00";
-
-		if (!processando) {
-			i = 0;
-			do  {   // Busca por sequencias de caracteres para catar inicio do codigo
-				letra[0] = letra[1];
-				letra[1] = linha[i];
-				if ((letra[0]=='0') && (letra[1]==':') )  // Cata primeira linha de codigo omecando com "0: "
-				{
-					// Le programa e guarda no vetor MEMORY[32768]
-					processando = 1;
-					j = 0;
-				}
-				i++;
-			} while (linha[i] != '\0');
-
-		}
-
-		if (processando && (j < TAMANHO_MEMORIA)) {
-			MEMORY[j] = processa_linha(linha);
-			if (MEMORY[j] == -1) {
-				printf("Linha invalida (%d): '%s'", j, linha);
-			}
-			else {
-				//printf("Valor: %d. Linha: %s\n", MEMORY[j], linha);
-			}
-			j++;
-		}
-
-
-
-	} // Fim do   while (!feof(stream))
-	fclose(stream);  // Nunca esqueca um arquivo aberto!!
-}
-
-//processa uma linha completa e retorna o número codificado
-//retorna -1 em caso de erro
-//NOTA: Assume radix=BIN no arquivo CPURAM.MIF
-int processa_linha(char* linha) {
-	int i=0;
-	int j=0;
-	int valor=0;
-	//procura o inicio do numero
-	while (linha[i] != ':') {
-		if (linha[i] == 0) {
-			return -1;
-		}
-		i++;
-	}
-
-	valor = 0;
-	for (j=0;j<16;j++) { //le a palavra toda
-		valor <<= 1; //shifta pra esquerda entrando 0
-		valor += linha[i+j+1] - '0'; //converte char pra numero 0 ou 1 o bit 15-k da palavra
-	}
-
-	return valor;
 }
