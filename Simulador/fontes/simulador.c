@@ -45,35 +45,6 @@ Do todos os comandos...
 //#define sULA 0
 //#define sDATA_OUT 1
 
-// Opcodes das Instrucoes:
-// Data Manipulation:
-#define LOADIMED 56   // "111000"; -- LOAD Rx Nr  (b0=0)   -- Rx <- Nr    ou   Load SP Nr (b0=1)  -- SP <- Nr    Format: < inst(6) | Rx(3) | xxxxxxb0 >  + 16bit Numero
-#define LOADINDEX 60  // "111100"; -- LOAD Rx Ry   -- Rx <- M[Ry]	Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
-#define STOREINDEX 61 // "111101"; -- STORE Rx Ry  -- M[Rx] <- Ry	Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
-
-
-#define LMOD 37     // "100101"; -- MOD Rx Ry Rz   			-- Rx <- Ry MOD Rz 	  	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
-
-
-// Logic Instructions (All should begin wiht "01"):
-#define LAND 18     // "010010"; -- AND Rx Ry Rz  	-- Rz <- Rx AND Ry	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
-#define LOR 19      // "010011"; -- OR Rx Ry Rz   	-- Rz <- Rx OR Ry		Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
-#define LXOR 20     // "010100"; -- XOR Rx Ry Rz  	-- Rz <- Rx XOR Ry	Format: < inst(6) | Rx(3) | Ry(3) | Rz(3)| x >
-#define LNOT 21     // "010101"; -- NOT Rx Ry       	-- Rx <- NOT(Ry)		Format: < inst(6) | Rx(3) | Ry(3) | xxxx >
-
-
-// Flag register
-#define NEGATIVE 9
-#define STACK_UNDERFLOW 8
-#define STACK_OVERFLOW 7
-#define DIV_BY_ZERO 6
-#define ARITHMETIC_OVERFLOW 5
-#define CARRY 4
-#define ZERO 3
-#define EQUAL 2
-#define LESSER 1
-#define GREATER 0
-
 #include <stdlib.h>     // Rand
 #include <stdio.h>      // Printf
 #include <math.h>
@@ -81,6 +52,7 @@ Do todos os comandos...
 #include "operacao.h"
 #include "memoria.h"
 #include "teclado.h"
+#include "flag.h"
 #include "ula.h"
 
 unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
@@ -92,7 +64,7 @@ int main()
 {
 	int i=0;
 	int key=0;    // Le Teclado
-	int PC=0, IR=0, SP=0, MAR=0, rx=0, ry=0, rz=0, COND=0, RW=0, DATA_OUT=0;
+	int pc=0, ir=0, sp=0, mar=0, rx=0, ry=0, rz=0, COND=0, RW=0, DATA_OUT=0;
 	int LoadPC=0, IncPC=0, LoadIR=0, LoadSP=0, IncSP=0, DecSP=0, LoadMAR=0, LoadFR=0;
 	int M1=0, M2=0, M3=0, M4=0, M5=0, M6=0;
 	int selM1=0, selM2=0, selM3=0, selM4=0, selM5=0, selM6=0;
@@ -102,7 +74,7 @@ int main()
 	int temp=0;
 	unsigned char state=0; // reset
 	int OP=0;  // ULA
-	int TECLADO;
+	int tecla;
 	resultado_ula_t resultadoUla;
 
 	le_arquivo_memoria(MEMORY);
@@ -121,28 +93,28 @@ loop:
 	//key = getchar();   
 
 	// Executa Load dos Registradores
-	if(LoadIR) IR = DATA_OUT;
+	if(LoadIR) ir = DATA_OUT;
 
-	if(LoadPC) PC = DATA_OUT;
+	if(LoadPC) pc = DATA_OUT;
 
-	if(IncPC) PC++;
+	if(IncPC) pc++;
 
-	if(LoadMAR) MAR = DATA_OUT;
+	if(LoadMAR) mar = DATA_OUT;
 
-	if(LoadSP) SP = M4;
+	if(LoadSP) sp = M4;
 
-	if(IncSP) SP++;
+	if(IncSP) sp++;
 
-	if(DecSP) SP--;
+	if(DecSP) sp--;
 
 	if(LoadFR)
 		for(i=16; i--; )              // Converte o int M6 para o vetor FR
 			FR[i] = pega_pedaco(M6,i,i); //  Tem que trasformar em Vetor
 
 	// Carrega dados do Mux 2 para os registradores
-	rx = pega_pedaco(IR,9,7);
-	ry = pega_pedaco(IR,6,4);
-	rz = pega_pedaco(IR,3,1);
+	rx = pega_pedaco(ir,9,7);
+	ry = pega_pedaco(ir,6,4);
+	rz = pega_pedaco(ir,3,1);
 	
 	// Coloca valor do Mux2 para o registrador com Load
 	if(LoadReg[rx]) reg[rx] = M2;
@@ -180,10 +152,10 @@ loop:
 			for(i=0;i<16;i++)
 				FR[i] = 0;
 
-			PC = 0;  // inicializa na linha Zero da memoria -> Programa tem que comecar na linha Zero !!
-			IR = 0;
-			MAR = 0;
-			SP = TAMANHO_MEMORIA -1;
+			pc = 0;  // inicializa na linha Zero da memoria -> Programa tem que comecar na linha Zero !!
+			ir = 0;
+			mar = 0;
+			sp = TAMANHO_MEMORIA -1;
 
 			RW = 0;
 			DATA_OUT = 0;  // Barramento de saida de Dados da Memoria
@@ -223,18 +195,18 @@ loop:
 		case STATE_DECODE:
 
 			// Case das instrucoes
-			opcode = pega_pedaco(IR,15,10);
+			opcode = pega_pedaco(ir,15,10);
 
 			switch(opcode){
 				case INCHAR:
 					if(esta_teclando()) {
-						TECLADO = getchar();
+						tecla = getchar();
 					}
 					else {
-						TECLADO = TECLA_PADRAO;
+						tecla = TECLA_PADRAO;
 					}
 
-					TECLADO = pega_pedaco(TECLADO,7,0);
+					tecla = pega_pedaco(tecla,7,0);
 					selM2 = sTECLADO;
 					LoadReg[rx] = 1;
 
@@ -248,7 +220,7 @@ loop:
 					state=STATE_FETCH;
 					break;
 
-				case LOADIMED:
+				case LOADN:
 					// reg[rx] = mem[PC];
 					// PC++;
 					selM1 = sPC;
@@ -271,7 +243,7 @@ loop:
 					state=STATE_EXECUTE;
 					break;
 
-				case LOADINDEX:
+				case LOADI:
 					// reg[rx] = MEMORY[reg[ry]];
 					
 					// -----------------------------
@@ -286,7 +258,7 @@ loop:
 					state=STATE_EXECUTE;
 					break;
 
-				case STOREINDEX:
+				case STOREI:
 					//mem[reg[rx]] = reg[ry];
 					
 					// -----------------------------
@@ -303,11 +275,11 @@ loop:
 				case SUB:
 				case MULT:
 				case DIV:
-				case LMOD:
-				case LAND:
-				case LOR:
-				case LXOR:
-				case LNOT:
+				case MOD:
+				case AND:
+				case OR:
+				case XOR:
+				case NOT:
 					// reg[rx] = reg[ry] + reg[rz]; // Soma ou outra operacao
 					
 					// -----------------------------
@@ -330,16 +302,16 @@ loop:
 
 				case SHIFT:
 
-					switch(pega_pedaco(IR,6,4))
-					{   case 0: reg[rx] = reg[rx] << pega_pedaco(IR,3,0);           break;
-						case 1: reg[rx] = ~((~(reg[rx]) << pega_pedaco(IR,3,0)));   break;
-						case 2: reg[rx] = reg[rx] >> pega_pedaco(IR,3,0);           break;
-						case 3: reg[rx] = ~((~(reg[rx]) >> pega_pedaco(IR,3,0)));   break;
+					switch(pega_pedaco(ir,6,4))
+					{   case 0: reg[rx] = reg[rx] << pega_pedaco(ir,3,0);           break;
+						case 1: reg[rx] = ~((~(reg[rx]) << pega_pedaco(ir,3,0)));   break;
+						case 2: reg[rx] = reg[rx] >> pega_pedaco(ir,3,0);           break;
+						case 3: reg[rx] = ~((~(reg[rx]) >> pega_pedaco(ir,3,0)));   break;
 						default:
-								if(pega_pedaco(IR,6,5)==2) // ROTATE LEFT
-									reg[rx] = rotaciona_esquerda(reg[rx],pega_pedaco(IR,3,0));
+								if(pega_pedaco(ir,6,5)==2) // ROTATE LEFT
+									reg[rx] = rotaciona_esquerda(reg[rx],pega_pedaco(ir,3,0));
 								else
-									reg[rx] = rotaciona_direita(reg[rx],pega_pedaco(IR,3,0)); 
+									reg[rx] = rotaciona_direita(reg[rx],pega_pedaco(ir,3,0)); 
 								break;
 					}
 					FR[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
@@ -351,7 +323,7 @@ loop:
 					break;
 
 				case JMP:
-					COND = pega_pedaco(IR,9,6);
+					COND = pega_pedaco(ir,9,6);
 
 					if((COND == 0)                       	                      // NO COND
 							|| (FR[0]==1 && (COND==7))                            // GREATER
@@ -407,7 +379,7 @@ loop:
 					break;
 
 				case SETC:
-					FR[4] = pega_pedaco(IR,9,9);
+					FR[4] = pega_pedaco(ir,9,9);
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -518,10 +490,10 @@ loop:
 	else M4 = reg[selM4]; 
 
 	// Selecao do Mux1
-	if      (selM1 == sPC)  M1 = PC;
-	else if (selM1 == sMAR) M1 = MAR;
+	if      (selM1 == sPC)  M1 = pc;
+	else if (selM1 == sMAR) M1 = mar;
 	else if (selM1 == sM4)  M1 = M4;
-	else if (selM1 == sSP)  M1 = SP;
+	else if (selM1 == sSP)  M1 = sp;
 
 	if(M1 > (TAMANHO_MEMORIA)) {
 		M1 = 0;
@@ -550,10 +522,10 @@ loop:
 	else if (selM2 == sDATA_OUT) M2 = DATA_OUT;
 	else if (selM2 == sM4)  M2 = M4;
 	//else if (selM2 == sTECLADO) M2 = TECLADO;// TODO: selM2 com teclado
-	else if (selM2 == sSP)  M2 = SP; 
+	else if (selM2 == sSP)  M2 = sp; 
 
 	// Selecao do Mux5
-	if (selM5 == sPC) M5 = PC;
+	if (selM5 == sPC) M5 = pc;
 	else if (selM5 == sM3) M5 = M3;
 
 	// Selecao do Mux6
