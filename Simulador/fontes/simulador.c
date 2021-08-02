@@ -16,13 +16,16 @@ int main() {
 
 	cpu_t cpu = cria_cpu();
 
-	int rx=0, ry=0, rz=0, COND=0, RW=0, DATA_OUT=0;
+	operacao_t operacao;
+	operacao_t operacao_ula;
 
-	int carry=0;// Flag do IR que indica se a ULA vai fazer operação com carry ou não 
-	int opcode=0;
-	int OP=0;  // ULA
-	int tecla;
-	resultado_ula_t resultadoUla;
+	bool tem_carry = false;
+	resultado_ula_t resultado_ula;
+
+	acesso_t rw = LEITURA;
+	unsigned int valor_memoria = 0;
+
+	char tecla;
 
 
 inicio:
@@ -31,36 +34,34 @@ inicio:
 	printf("                          'q' goto fim...\n\n");
 	printf("Rodando...\n");
 
-// Loop principal do processador: Nunca para!!
+	cpu.estado = RESETA;
+
 loop:
-	atualiza_registradores(&cpu, DATA_OUT);
+	atualiza_registradores(&cpu, valor_memoria);
 
-	// Carrega dados do Mux 2 para os registradores
-	rx = pega_pedaco(cpu.ir.valor, 9, 7);
-	ry = pega_pedaco(cpu.ir.valor, 6, 4);
-	rz = pega_pedaco(cpu.ir.valor, 3, 1);
+	int rx = pega_pedaco(cpu.ir.valor, 9, 7);
+	int ry = pega_pedaco(cpu.ir.valor, 6, 4);
+	int rz = pega_pedaco(cpu.ir.valor, 3, 1);
 
-	// Operacao de Escrita da Memoria
-	if (RW == ESCRITA) {
+	if (rw == ESCRITA) {
 		memoria[cpu.mux[M1].valor] = cpu.mux[M5].valor;
 	}
-	RW = LEITURA;
+	rw = LEITURA;
 
-	// Reinicializa os Loads dos registradores
 	reseta_sinais_registradores(&cpu);
 
-	// Maquina de Controle
-	switch(cpu.estado)
-	{
+	switch(cpu.estado) {
 		case RESETA:
 			cpu = cria_cpu();
+			rw = LEITURA;
+			valor_memoria = 0;
 
 			cpu.estado = BUSCA;
 			break;
 
 		case BUSCA:
 			cpu.mux[M1].selecao = PC;
-			RW = LEITURA;
+			rw = LEITURA;
 			cpu.ir.load = true;
 			cpu.pc.incrementa = true;
 
@@ -68,9 +69,9 @@ loop:
 			break;
 
 		case DECODIFICA:
-			opcode = pega_pedaco(cpu.ir.valor, 15, 10);
+			operacao = pega_pedaco(cpu.ir.valor, 15, 10);
 
-			switch(opcode){
+			switch(operacao){
 				case INCHAR:
 					if(esta_teclando()) {
 						tecla = getchar();
@@ -94,7 +95,7 @@ loop:
 
 				case LOADN:
 					cpu.mux[M1].selecao = PC;
-					RW = LEITURA;
+					rw = LEITURA;
 					cpu.mux[M2].selecao = MEMORIA;
 					cpu.registradores[rx].load = true;
 					cpu.pc.incrementa = true;
@@ -104,7 +105,7 @@ loop:
 
 				case LOAD:
 					cpu.mux[M1].selecao = PC;
-					RW = LEITURA;
+					rw = LEITURA;
 					cpu.mar.load = true;
 					cpu.pc.incrementa = true;
 
@@ -189,27 +190,27 @@ loop:
 					cpu.estado = BUSCA;
 					break;
 
-				case JMP:
-					COND = pega_pedaco(cpu.ir.valor, 9, 6);
+				case JMP: ;
+					unsigned int condicao = pega_pedaco(cpu.ir.valor, 9, 6);
 
-					if((COND == 0)                       	                      // NO COND
-							|| (cpu.fr.flags[0]==1 && (COND==7))                            // GREATER
-							|| ((cpu.fr.flags[2]==1 || cpu.fr.flags[0]==1) && (COND==9))              // GREATER EQUAL
-							|| (cpu.fr.flags[1]==1 && (COND==8))                            // LESSER
-							|| ((cpu.fr.flags[2]==1 || cpu.fr.flags[1]==1) && (COND==10))             // LESSER EQUAL
-							|| (cpu.fr.flags[2]==1 && (COND==1))                            // EQUAL
-							|| (cpu.fr.flags[2]==0 && (COND==2))                            // NOT EQUAL
-							|| (cpu.fr.flags[3]==1 && (COND==3))                            // ZERO
-							|| (cpu.fr.flags[3]==0 && (COND==4))                            // NOT ZERO
-							|| (cpu.fr.flags[4]==1 && (COND==5))                            // CARRY
-							|| (cpu.fr.flags[4]==0 && (COND==6))                            // NOT CARRY
-							|| (cpu.fr.flags[5]==1 && (COND==11))                           // OVERFLOW
-							|| (cpu.fr.flags[5]==0 && (COND==12))                           // NOT OVERFLOW
-							|| (cpu.fr.flags[6]==1 && (COND==14))                           // NEGATIVO
-							|| (cpu.fr.flags[9]==1 && (COND==13)))                          // DIVBYZERO
+					if((condicao == 0)                       	                      // NO condicao
+							|| (cpu.fr.flags[0]==1 && (condicao==7))                            // GREATER
+							|| ((cpu.fr.flags[2]==1 || cpu.fr.flags[0]==1) && (condicao==9))              // GREATER EQUAL
+							|| (cpu.fr.flags[1]==1 && (condicao==8))                            // LESSER
+							|| ((cpu.fr.flags[2]==1 || cpu.fr.flags[1]==1) && (condicao==10))             // LESSER EQUAL
+							|| (cpu.fr.flags[2]==1 && (condicao==1))                            // EQUAL
+							|| (cpu.fr.flags[2]==0 && (condicao==2))                            // NOT EQUAL
+							|| (cpu.fr.flags[3]==1 && (condicao==3))                            // ZERO
+							|| (cpu.fr.flags[3]==0 && (condicao==4))                            // NOT ZERO
+							|| (cpu.fr.flags[4]==1 && (condicao==5))                            // CARRY
+							|| (cpu.fr.flags[4]==0 && (condicao==6))                            // NOT CARRY
+							|| (cpu.fr.flags[5]==1 && (condicao==11))                           // OVERFLOW
+							|| (cpu.fr.flags[5]==0 && (condicao==12))                           // NOT OVERFLOW
+							|| (cpu.fr.flags[6]==1 && (condicao==14))                           // NEGATIVO
+							|| (cpu.fr.flags[9]==1 && (condicao==13)))                          // DIVBYZERO
 					{
 						cpu.mux[M1].selecao = PC;
-						RW = LEITURA;
+						rw = LEITURA;
 						cpu.pc.load = true;
 					}
 					else {
@@ -267,10 +268,10 @@ loop:
 			break;
 
 		case EXECUTA_1:
-			switch(opcode) {
+			switch(operacao) {
 				case LOAD:
 					cpu.mux[M1].selecao = MAR;
-					RW = LEITURA;
+					rw = LEITURA;
 					cpu.mux[M2].selecao = MEMORIA;
 					cpu.registradores[rx].load = true;
 
@@ -279,7 +280,7 @@ loop:
 
 				case STORE:
 					cpu.mux[M1].selecao = MAR;
-					RW = ESCRITA;
+					rw = ESCRITA;
 					cpu.mux[M3].selecao = rx;
 					cpu.mux[M5].selecao = MUX_3;
 
@@ -288,7 +289,7 @@ loop:
 
 				case CALL:
 					cpu.mux[M1].selecao = PC;
-					RW = LEITURA;
+					rw = LEITURA;
 					cpu.pc.load = true;
 
 					cpu.estado = BUSCA;
@@ -337,18 +338,15 @@ loop:
 	atualiza_mux_1(&cpu);
 	atualiza_mux_3(&cpu);
 
-	// Operacao de Leitura da Memoria
-	if (RW == LEITURA) {
-		DATA_OUT = memoria[cpu.mux[M1].valor];
+	if (rw == LEITURA) {
+		valor_memoria = memoria[cpu.mux[M1].valor];
 	}
 
-	// Operacao da ULA
-	resultadoUla = ula(cpu.mux[M3].valor, cpu.mux[M4].valor, cpu.fr.flags[CARRY], carry, OP);
+	resultado_ula = ula(cpu.mux[M3].valor, cpu.mux[M4].valor, cpu.fr.flags[CARRY], tem_carry, operacao_ula);
 
-	// Selecao do Mux2
-	atualiza_mux_2(&cpu, resultadoUla.valor, DATA_OUT, tecla);
+	atualiza_mux_2(&cpu, resultado_ula.valor, valor_memoria, tecla);
 	atualiza_mux_5(&cpu);
-	atualiza_mux_6(&cpu, resultadoUla.fr, DATA_OUT);
+	atualiza_mux_6(&cpu, resultado_ula.fr, valor_memoria);
 
 	goto loop;
 

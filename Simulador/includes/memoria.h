@@ -3,10 +3,11 @@
 
 #define TAMANHO_MEMORIA 32768 // 32 KB
 
-enum LeituraEscrita {
+typedef enum Acesso {
     LEITURA,
     ESCRITA
-};
+}
+acesso_t;
 
 void le_arquivo_memoria(unsigned int memoria[]);
 
