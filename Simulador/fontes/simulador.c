@@ -149,33 +149,7 @@ loop:
 					break;
 
 				case SHIFT:
-					switch(pega_pedaco(cpu.ir.valor, 6, 4)) {
-						case 0: 
-							cpu.registradores[rx].valor = cpu.registradores[rx].valor << pega_pedaco(cpu.ir.valor, 3, 0);
-							break;
-						
-						case 1:
-							cpu.registradores[rx].valor = ~(~(cpu.registradores[rx].valor) << pega_pedaco(cpu.ir.valor, 3, 0));
-							break;
-						
-						case 2:
-							cpu.registradores[rx].valor = cpu.registradores[rx].valor >> pega_pedaco(cpu.ir.valor, 3, 0);
-							break;
-						
-						case 3:
-							cpu.registradores[rx].valor = ~(~(cpu.registradores[rx].valor) >> pega_pedaco(cpu.ir.valor,3,0));
-							break;
-						
-						default:
-								if(pega_pedaco(cpu.ir.valor, 6, 5) == 2) { // ROTATE LEFT
-									cpu.registradores[rx].valor = rotaciona_esquerda(cpu.registradores[rx].valor, pega_pedaco(cpu.ir.valor, 3, 0));
-								}
-								else {
-									cpu.registradores[rx].valor = rotaciona_direita(cpu.registradores[rx].valor, pega_pedaco(cpu.ir.valor, 3, 0)); 
-								}
-								break;
-					}
-
+					cpu.registradores[rx].valor = shift(cpu.registradores[rx].valor, cpu.ir.valor);
 					cpu.fr.flags[ZERO] = cpu.registradores[rx].valor == 0;
 
 					cpu.estado = BUSCA;

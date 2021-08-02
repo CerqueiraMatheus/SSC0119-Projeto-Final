@@ -11,7 +11,6 @@ typedef struct ResultadoUla {
 resultado_ula_t;
 
 resultado_ula_t ula(unsigned int x, unsigned int y, int carry, bool tem_carry, operacao_t operacao);
-unsigned int rotaciona_esquerda(unsigned int bits, int shift);
-unsigned int rotaciona_direita(unsigned int bits, int shift);
+unsigned int shift(unsigned int bits, unsigned int ir);
 
 #endif // ULA_H
