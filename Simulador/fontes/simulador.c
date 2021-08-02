@@ -1,7 +1,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
 #include "registrador.h"
 #include "operacao.h"
@@ -13,10 +12,8 @@
 #include "mux.h"
 
 
-int fr[16] = {0};  // Flag Register: <...|Negativo|StackUnderflow|StackOverflow|DivByZero|ArithmeticOverflow|carry|zero|equal|lesser|greater>
 
-int main()
-{
+int main() {
 	unsigned int memoria[TAMANHO_MEMORIA];
 	le_arquivo_memoria(memoria);
 	
@@ -32,7 +29,8 @@ int main()
 	registrador_t mar = cria_registrador();
 
 	int rx=0, ry=0, rz=0, COND=0, RW=0, DATA_OUT=0;
-	int LoadFR=0;
+
+	registrador_flags_t fr = cria_registrador_flags();
 
 	mux_t mux[NUMERO_MUX];
 	for (int i = 0; i < NUMERO_MUX; i++) {
@@ -42,7 +40,6 @@ int main()
 
 	int carry=0;// Flag do IR que indica se a ULA vai fazer operação com carry ou não 
 	int opcode=0;
-	int temp=0;
 	estado_t estado = RESETA;
 	int OP=0;  // ULA
 	int tecla;
@@ -74,9 +71,9 @@ loop:
 
 	if(sp.decrementa) sp.valor--;
 
-	if(LoadFR)
-		for(i=16; i--; )              // Converte o int M6 para o vetor FR
-			fr[i] = pega_pedaco(mux[M6].valor, i, i); //  Tem que trasformar em Vetor
+	if(fr.load) {
+		inteiro_para_flags(mux[M6].valor, fr.flags);
+	}
 
 	// Carrega dados do Mux 2 para os registradores
 	rx = pega_pedaco(ir.valor, 9, 7);
@@ -105,7 +102,7 @@ loop:
 	sp.load  = false;
 	sp.incrementa   = false;
 	sp.decrementa   = false;
-	LoadFR  = 0;
+	fr.load  = false;
 
 
 	// Maquina de Controle
@@ -117,8 +114,9 @@ loop:
 				registradores[i].valor = 0;
 				registradores[i].load = false;
 			}
-			for(i=0;i<16;i++)
-				fr[i] = 0;
+			for(i=0;i<16;i++) {
+				fr.flags[i] = false;
+			}
 
 			pc.valor = 0;  // inicializa na linha Zero da memoria -> Programa tem que comecar na linha Zero !!
 			ir.valor = 0;
@@ -135,7 +133,7 @@ loop:
 			sp.load  = false;
 			sp.incrementa   = false;
 			sp.decrementa   = false;
-			LoadFR  = 0;
+			fr.load  = false;
 			mux[M1].selecao   = PC;
 			mux[M2].selecao   = DADO_SAIDA;
 			mux[M3].selecao   = 0;  // Pode por direto o nr. do Regisrador
@@ -297,9 +295,9 @@ loop:
 								}
 								break;
 					}
-					fr[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
+					fr.flags[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
 					if(registradores[rx].valor == 0) {
-						fr[3] = 1;  // Se resultado = 0, seta o Flag de Zero
+						fr.flags[3] = 1;  // Se resultado = 0, seta o Flag de Zero
 					}
 
 					// -----------------------------
@@ -310,20 +308,20 @@ loop:
 					COND = pega_pedaco(ir.valor, 9, 6);
 
 					if((COND == 0)                       	                      // NO COND
-							|| (fr[0]==1 && (COND==7))                            // GREATER
-							|| ((fr[2]==1 || fr[0]==1) && (COND==9))              // GREATER EQUAL
-							|| (fr[1]==1 && (COND==8))                            // LESSER
-							|| ((fr[2]==1 || fr[1]==1) && (COND==10))             // LESSER EQUAL
-							|| (fr[2]==1 && (COND==1))                            // EQUAL
-							|| (fr[2]==0 && (COND==2))                            // NOT EQUAL
-							|| (fr[3]==1 && (COND==3))                            // ZERO
-							|| (fr[3]==0 && (COND==4))                            // NOT ZERO
-							|| (fr[4]==1 && (COND==5))                            // CARRY
-							|| (fr[4]==0 && (COND==6))                            // NOT CARRY
-							|| (fr[5]==1 && (COND==11))                           // OVERFLOW
-							|| (fr[5]==0 && (COND==12))                           // NOT OVERFLOW
-							|| (fr[6]==1 && (COND==14))                           // NEGATIVO
-							|| (fr[9]==1 && (COND==13)))                          // DIVBYZERO
+							|| (fr.flags[0]==1 && (COND==7))                            // GREATER
+							|| ((fr.flags[2]==1 || fr.flags[0]==1) && (COND==9))              // GREATER EQUAL
+							|| (fr.flags[1]==1 && (COND==8))                            // LESSER
+							|| ((fr.flags[2]==1 || fr.flags[1]==1) && (COND==10))             // LESSER EQUAL
+							|| (fr.flags[2]==1 && (COND==1))                            // EQUAL
+							|| (fr.flags[2]==0 && (COND==2))                            // NOT EQUAL
+							|| (fr.flags[3]==1 && (COND==3))                            // ZERO
+							|| (fr.flags[3]==0 && (COND==4))                            // NOT ZERO
+							|| (fr.flags[4]==1 && (COND==5))                            // CARRY
+							|| (fr.flags[4]==0 && (COND==6))                            // NOT CARRY
+							|| (fr.flags[5]==1 && (COND==11))                           // OVERFLOW
+							|| (fr.flags[5]==0 && (COND==12))                           // NOT OVERFLOW
+							|| (fr.flags[6]==1 && (COND==14))                           // NEGATIVO
+							|| (fr.flags[9]==1 && (COND==13)))                          // DIVBYZERO
 					{ // PC = memoria[PC];
 						mux[M1].selecao = PC;
 						RW = 0;
@@ -363,7 +361,7 @@ loop:
 					break;
 
 				case SETC:
-					fr[4] = pega_pedaco(ir.valor, 9, 9);
+					fr.flags[4] = pega_pedaco(ir.valor, 9, 9);
 					// -----------------------------
 					estado=BUSCA;
 					break;
@@ -488,17 +486,11 @@ loop:
 	if (RW == 0) DATA_OUT = memoria[mux[M1].valor];  // Tem que vir antes do M2 que usa DATA_OUT
 
 	// Selecao do Mux3  --> Tem que vir antes da ULA e do M5
-	// Converte o vetor FR para int
-	// TODO talvez fazer isso depois da operação da ula?
-	temp = 0;
-	for(i=16; i--; )        
-		temp = temp + (int) (fr[i] * (pow(2.0,i))); 
-
-	if(mux[M3].selecao == FR) mux[M3].valor = temp;  // Seleciona com 8 o FR
+	if(mux[M3].selecao == FR) mux[M3].valor = flags_para_inteiro(fr.flags);
 	else mux[M3].valor = registradores[mux[M3].selecao].valor; 
 
 	// Operacao da ULA
-	resultadoUla = ula(mux[M3].valor, mux[M4].valor, fr[CARRY], carry, OP);
+	resultadoUla = ula(mux[M3].valor, mux[M4].valor, fr.flags[CARRY], carry, OP);
 
 	// Selecao do Mux2
 	if      (mux[M2].selecao == ULA) mux[M2].valor = resultadoUla.valor;

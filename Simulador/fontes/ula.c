@@ -101,7 +101,7 @@ static resultado_ula_t _operacao_aritmetica(unsigned int x, unsigned int y, int 
 
     fr[ZERO] = valor == 0;
 
-    return (resultado_ula_t) {.valor = valor, .fr = fr_para_inteiro(fr)};
+    return (resultado_ula_t) {.valor = valor, .fr = flags_para_inteiro(fr)};
 }
 
 static resultado_ula_t _operacao_logica(unsigned int x, unsigned int y, operacao_t operacao) {
@@ -139,5 +139,5 @@ static resultado_ula_t _operacao_logica(unsigned int x, unsigned int y, operacao
         fr[ZERO] = valor == 0;
     }
 
-    return (resultado_ula_t) {.valor = valor, .fr = fr_para_inteiro(fr)};
+    return (resultado_ula_t) {.valor = valor, .fr = flags_para_inteiro(fr)};
 }

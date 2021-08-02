@@ -3,6 +3,12 @@
 
 #include <stdbool.h>
 
+typedef struct RegistradorFlag {
+    bool flags[TAMANHO_PALAVRA];
+    bool load;
+}
+registrador_flags_t;
+
 enum Flag {
     MAIOR,
     MENOR,
@@ -16,6 +22,8 @@ enum Flag {
     NEGATIVO
 };
 
-unsigned int fr_para_inteiro(bool fr[]);
+registrador_flags_t cria_registrador_flags();
+unsigned int flags_para_inteiro(bool flags[]);
+void inteiro_para_flags(unsigned int inteiro, bool fr[]);
 
 #endif // FLAG_H
