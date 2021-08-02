@@ -1,9 +1,7 @@
 #ifndef FLAG_H
 #define FLAG_H
 
-
 #include <stdbool.h>
-
 
 enum Flag {
     MAIOR,
@@ -18,8 +16,6 @@ enum Flag {
     NEGATIVO
 };
 
-
 unsigned int fr_para_inteiro(bool fr[]);
-
 
 #endif // FLAG_H

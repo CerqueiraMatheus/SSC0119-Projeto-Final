@@ -1,9 +1,7 @@
 #ifndef OPERACAO_H
 #define OPERACAO_H
 
-
 #define TAMANHO_PALAVRA 16
-
 
 typedef enum Operacao {
     // Controle
@@ -51,8 +49,6 @@ typedef enum Operacao {
 }
 operacao_t;
 
-
 unsigned int pega_pedaco(unsigned int bits, int mais_significativo, int menos_significativo);
-
 
 #endif // OPERACAO_H
