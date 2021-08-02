@@ -74,50 +74,17 @@ Do todos os comandos...
 #define LESSER 1
 #define GREATER 0
 
-//#include <curses.h>     //  Novo Terminal cheio de funcoes!!!
 #include <stdlib.h>     // Rand
 #include <stdio.h>      // Printf
-#include <fcntl.h>      // Fileopen - Fileclose - fprintf - fscanf
 #include <math.h>
-
-// kbhit() TODO: deletar
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
 
 #include "operacao.h"
 #include "memoria.h"
+#include "teclado.h"
 #include "ula.h"
 
 unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
 int reg[8]; // 8 registradores
-
-int kbhit(void)
-{
-  struct termios oldt, newt;
-  int ch;
-  int oldf;
- 
-  tcgetattr(STDIN_FILENO, &oldt);
-  newt = oldt;
-  newt.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
- 
-  ch = getchar();
- 
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-  fcntl(STDIN_FILENO, F_SETFL, oldf);
- 
-  if(ch != EOF)
-  {
-    ungetc(ch, stdin);
-    return 1;
-  }
- 
-  return 0;
-}
 
 int FR[16] = {0};  // Flag Register: <...|Negativo|StackUnderflow|StackOverflow|DivByZero|ArithmeticOverflow|carry|zero|equal|lesser|greater>
 
@@ -260,15 +227,12 @@ loop:
 
 			switch(opcode){
 				case INCHAR:
-					// TODO: entrada teclado
-					//TECLADO = getchar();
-					//timeout(99999);
-					//if(TECLADO == ERR)
-					//	TECLADO = 255;
-					if(kbhit())
+					if(esta_teclando()) {
 						TECLADO = getchar();
-					else
-						TECLADO = 255;
+					}
+					else {
+						TECLADO = TECLA_PADRAO;
+					}
 
 					TECLADO = pega_pedaco(TECLADO,7,0);
 					selM2 = sTECLADO;
