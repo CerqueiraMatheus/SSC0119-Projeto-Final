@@ -20,33 +20,8 @@ Do todos os comandos...
 #define STATE_HALTED 5
 //----------------
 
-// Selecao do Mux1
-#define sPC 0
-#define sMAR 1
-#define sM4 2
-#define sSP 3
-
-// Selecao do Mux2
-#define sULA 0
-#define sDATA_OUT 1
-//#define sM4 2
-//#define sSP 3
-#define sTECLADO 4
-
-// Selecao do Mux3 --> E´ so´ colocar: 0, 1, 2 ... 7  para selecionar os Registradores
-
-// Selecao do Mux4 --> E´ so´ colocar: 0, 1, 2 ... 7  para selecionar os Registradores ou 8 para entrar o nr. 1
-
-// Selecao do Mux5
-//#define sPC 0
-#define sM3 1
-
-// Selecao do Mux6
-//#define sULA 0
-//#define sDATA_OUT 1
-
-#include <stdlib.h>     // Rand
-#include <stdio.h>      // Printf
+#include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 #include "operacao.h"
@@ -54,11 +29,13 @@ Do todos os comandos...
 #include "teclado.h"
 #include "flag.h"
 #include "ula.h"
+#include "mux.h"
+
 
 unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
 int reg[8]; // 8 registradores
 
-int FR[16] = {0};  // Flag Register: <...|Negativo|StackUnderflow|StackOverflow|DivByZero|ArithmeticOverflow|carry|zero|equal|lesser|greater>
+int fr[16] = {0};  // Flag Register: <...|Negativo|StackUnderflow|StackOverflow|DivByZero|ArithmeticOverflow|carry|zero|equal|lesser|greater>
 
 int main()
 {
@@ -66,8 +43,13 @@ int main()
 	int key=0;    // Le Teclado
 	int pc=0, ir=0, sp=0, mar=0, rx=0, ry=0, rz=0, COND=0, RW=0, DATA_OUT=0;
 	int LoadPC=0, IncPC=0, LoadIR=0, LoadSP=0, IncSP=0, DecSP=0, LoadMAR=0, LoadFR=0;
-	int M1=0, M2=0, M3=0, M4=0, M5=0, M6=0;
-	int selM1=0, selM2=0, selM3=0, selM4=0, selM5=0, selM6=0;
+
+	mux_t mux[NUMERO_MUX];
+	for (int i = 0; i < NUMERO_MUX; i++) {
+		mux[i].dado = 0;
+		mux[i].selecao = 0;
+	}
+
 	int LoadReg[8] = {0};
 	int carry=0;// Flag do IR que indica se a ULA vai fazer operação com carry ou não 
 	int opcode=0;
@@ -101,7 +83,7 @@ loop:
 
 	if(LoadMAR) mar = DATA_OUT;
 
-	if(LoadSP) sp = M4;
+	if(LoadSP) sp = mux[M4].dado;
 
 	if(IncSP) sp++;
 
@@ -109,7 +91,7 @@ loop:
 
 	if(LoadFR)
 		for(i=16; i--; )              // Converte o int M6 para o vetor FR
-			FR[i] = pega_pedaco(M6,i,i); //  Tem que trasformar em Vetor
+			fr[i] = pega_pedaco(mux[M6].dado, i, i); //  Tem que trasformar em Vetor
 
 	// Carrega dados do Mux 2 para os registradores
 	rx = pega_pedaco(ir,9,7);
@@ -117,10 +99,10 @@ loop:
 	rz = pega_pedaco(ir,3,1);
 	
 	// Coloca valor do Mux2 para o registrador com Load
-	if(LoadReg[rx]) reg[rx] = M2;
+	if(LoadReg[rx]) reg[rx] = mux[M2].dado;
 
 	// Operacao de Escrita da Memoria
-	if (RW == 1) MEMORY[M1] = M5;
+	if (RW == 1) MEMORY[mux[M1].dado] = mux[M5].dado;
 
 	// ---------------------------------------
 
@@ -150,7 +132,7 @@ loop:
 				LoadReg[i] = 0;
 			}
 			for(i=0;i<16;i++)
-				FR[i] = 0;
+				fr[i] = 0;
 
 			pc = 0;  // inicializa na linha Zero da memoria -> Programa tem que comecar na linha Zero !!
 			ir = 0;
@@ -168,12 +150,12 @@ loop:
 			IncSP   = 0;
 			DecSP   = 0;
 			LoadFR  = 0;
-			selM1   = sPC;
-			selM2   = sDATA_OUT;
-			selM3   = 0;  // Pode por direto o nr. do Regisrador
-			selM4   = 0;  // Pode por direto o nr. do Regisrador
-			selM5   = sM3;
-			selM6   = sULA;
+			mux[M1].selecao   = PC;
+			mux[M2].selecao   = DADO_SAIDA;
+			mux[M3].selecao   = 0;  // Pode por direto o nr. do Regisrador
+			mux[M4].selecao   = 0;  // Pode por direto o nr. do Regisrador
+			mux[M5].selecao   = MUX_3;
+			mux[M6].selecao   = ULA;
 
 			// -----------------------------
 			state=STATE_FETCH;
@@ -183,7 +165,7 @@ loop:
 			// ----- Ciclo de Busca: --------
 			//IR = MEMORY[PC];
 
-			selM1 = sPC;
+			mux[M1].selecao = PC;
 			RW = 0;
 			LoadIR = 1;
 			IncPC = 1;
@@ -207,7 +189,7 @@ loop:
 					}
 
 					tecla = pega_pedaco(tecla,7,0);
-					selM2 = sTECLADO;
+					mux[M2].selecao = TECLADO;
 					LoadReg[rx] = 1;
 
 					// -----------------------------
@@ -223,9 +205,9 @@ loop:
 				case LOADN:
 					// reg[rx] = mem[PC];
 					// PC++;
-					selM1 = sPC;
+					mux[M1].selecao = PC;
 					RW = 0;
-					selM2 = sDATA_OUT;
+					mux[M2].selecao = DADO_SAIDA;
 					LoadReg[rx] = 1;
 					IncPC = 1;
 					// -----------------------------
@@ -235,7 +217,7 @@ loop:
 				case LOAD:
 					// MAR = MEMORY[PC];
 					// PC++;
-					selM1 = sPC;
+					mux[M1].selecao = PC;
 					RW = 0;
 					LoadMAR = 1; 
 					IncPC = 1;
@@ -314,9 +296,9 @@ loop:
 									reg[rx] = rotaciona_direita(reg[rx],pega_pedaco(ir,3,0)); 
 								break;
 					}
-					FR[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
+					fr[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
 					if(reg[rx] == 0)
-						FR[3] = 1;  // Se resultado = 0, seta o Flag de Zero
+						fr[3] = 1;  // Se resultado = 0, seta o Flag de Zero
 
 					// -----------------------------
 					state=STATE_FETCH;
@@ -326,22 +308,22 @@ loop:
 					COND = pega_pedaco(ir,9,6);
 
 					if((COND == 0)                       	                      // NO COND
-							|| (FR[0]==1 && (COND==7))                            // GREATER
-							|| ((FR[2]==1 || FR[0]==1) && (COND==9))              // GREATER EQUAL
-							|| (FR[1]==1 && (COND==8))                            // LESSER
-							|| ((FR[2]==1 || FR[1]==1) && (COND==10))             // LESSER EQUAL
-							|| (FR[2]==1 && (COND==1))                            // EQUAL
-							|| (FR[2]==0 && (COND==2))                            // NOT EQUAL
-							|| (FR[3]==1 && (COND==3))                            // ZERO
-							|| (FR[3]==0 && (COND==4))                            // NOT ZERO
-							|| (FR[4]==1 && (COND==5))                            // CARRY
-							|| (FR[4]==0 && (COND==6))                            // NOT CARRY
-							|| (FR[5]==1 && (COND==11))                           // OVERFLOW
-							|| (FR[5]==0 && (COND==12))                           // NOT OVERFLOW
-							|| (FR[6]==1 && (COND==14))                           // NEGATIVO
-							|| (FR[9]==1 && (COND==13)))                          // DIVBYZERO
+							|| (fr[0]==1 && (COND==7))                            // GREATER
+							|| ((fr[2]==1 || fr[0]==1) && (COND==9))              // GREATER EQUAL
+							|| (fr[1]==1 && (COND==8))                            // LESSER
+							|| ((fr[2]==1 || fr[1]==1) && (COND==10))             // LESSER EQUAL
+							|| (fr[2]==1 && (COND==1))                            // EQUAL
+							|| (fr[2]==0 && (COND==2))                            // NOT EQUAL
+							|| (fr[3]==1 && (COND==3))                            // ZERO
+							|| (fr[3]==0 && (COND==4))                            // NOT ZERO
+							|| (fr[4]==1 && (COND==5))                            // CARRY
+							|| (fr[4]==0 && (COND==6))                            // NOT CARRY
+							|| (fr[5]==1 && (COND==11))                           // OVERFLOW
+							|| (fr[5]==0 && (COND==12))                           // NOT OVERFLOW
+							|| (fr[6]==1 && (COND==14))                           // NEGATIVO
+							|| (fr[9]==1 && (COND==13)))                          // DIVBYZERO
 					{ // PC = MEMORY[PC];
-						selM1 = sPC;
+						mux[M1].selecao = PC;
 						RW = 0;
 						LoadPC = 1;
 					}
@@ -379,7 +361,7 @@ loop:
 					break;
 
 				case SETC:
-					FR[4] = pega_pedaco(ir,9,9);
+					fr[4] = pega_pedaco(ir,9,9);
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -414,9 +396,9 @@ loop:
 			switch(opcode){
 				case LOAD:
 					//reg[rx] = MEMORY[MAR];
-					selM1 = sMAR;
+					mux[M1].selecao = MAR;
 					RW = 0;
-					selM2 = sDATA_OUT;
+					mux[M2].selecao = DADO_SAIDA;
 					LoadReg[rx] = 1;
 					// -----------------------------
 					state=STATE_FETCH;
@@ -424,16 +406,16 @@ loop:
 
 				case STORE:
 					//MEMORY[MAR] = reg[rx];
-					selM1 = sMAR;
+					mux[M1].selecao = MAR;
 					RW = 1;
-					selM3 = rx;
-					selM5 = sM3;
+					mux[M3].selecao = rx;
+					mux[M5].selecao = MUX_3;
 					// -----------------------------
 					state=STATE_FETCH;
 					break; 
 
 				case CALL:
-					selM1 = sPC;
+					mux[M1].selecao = PC;
 					RW = 0;
 					LoadPC = 1;
 					// -----------------------------
@@ -486,51 +468,50 @@ loop:
 	}
 
 	// Selecao do Mux4   --> Tem que vir antes do M1 e do M2 que usam M4
-	if(selM4 == 8) M4 = 1;  // Seleciona 1 para fazer INC e DEC
-	else M4 = reg[selM4]; 
+	if(mux[M4].selecao == 8) mux[M4].dado = 1;  // Seleciona 1 para fazer INC e DEC
+	else mux[M4].dado = reg[mux[M4].selecao]; 
 
 	// Selecao do Mux1
-	if      (selM1 == sPC)  M1 = pc;
-	else if (selM1 == sMAR) M1 = mar;
-	else if (selM1 == sM4)  M1 = M4;
-	else if (selM1 == sSP)  M1 = sp;
+	if      (mux[M1].selecao == PC)  mux[M1].dado = pc;
+	else if (mux[M1].selecao == MAR) mux[M1].dado = mar;
+	else if (mux[M1].selecao == MUX_4)  mux[M1].dado = mux[M4].dado;
+	else if (mux[M1].selecao == SP)  mux[M1].dado = sp;
 
-	if(M1 > (TAMANHO_MEMORIA)) {
-		M1 = 0;
+	if(mux[M1].dado > TAMANHO_MEMORIA) {
 		printf("  \n\nUltrapassou limite da memoria, coloque um jmp no fim do código\n");
 		exit(1);
 	}
 
 	// Operacao de Leitura da Memoria
-	if (RW == 0) DATA_OUT = MEMORY[M1];  // Tem que vir antes do M2 que usa DATA_OUT
+	if (RW == 0) DATA_OUT = MEMORY[mux[M1].dado];  // Tem que vir antes do M2 que usa DATA_OUT
 
 	// Selecao do Mux3  --> Tem que vir antes da ULA e do M5
 	// Converte o vetor FR para int
 	// TODO talvez fazer isso depois da operação da ula?
 	temp = 0;
 	for(i=16; i--; )        
-		temp = temp + (int) (FR[i] * (pow(2.0,i))); 
+		temp = temp + (int) (fr[i] * (pow(2.0,i))); 
 
-	if(selM3 == 8) M3 = temp;  // Seleciona com 8 o FR
-	else M3 = reg[selM3]; 
+	if(mux[M3].selecao == FR) mux[M3].dado = temp;  // Seleciona com 8 o FR
+	else mux[M3].dado = reg[mux[M3].selecao]; 
 
 	// Operacao da ULA
-	resultadoUla = ula(M3, M4, FR[CARRY], carry, OP);
+	resultadoUla = ula(mux[M3].dado, mux[M4].dado, fr[CARRY], carry, OP);
 
 	// Selecao do Mux2
-	if      (selM2 == sULA) M2 = resultadoUla.valor;
-	else if (selM2 == sDATA_OUT) M2 = DATA_OUT;
-	else if (selM2 == sM4)  M2 = M4;
+	if      (mux[M2].selecao == ULA) mux[M2].dado = resultadoUla.valor;
+	else if (mux[M2].selecao == DADO_SAIDA) mux[M2].dado = DATA_OUT;
+	else if (mux[M2].selecao == MUX_4)  mux[M2].dado = mux[M4].dado;
 	//else if (selM2 == sTECLADO) M2 = TECLADO;// TODO: selM2 com teclado
-	else if (selM2 == sSP)  M2 = sp; 
+	else if (mux[M2].selecao == SP)  mux[M2].dado = sp;
 
 	// Selecao do Mux5
-	if (selM5 == sPC) M5 = pc;
-	else if (selM5 == sM3) M5 = M3;
+	if (mux[M5].selecao == PC) mux[M5].dado = pc;
+	else if (mux[M5].selecao == MUX_3) mux[M5].dado = mux[M3].dado;
 
 	// Selecao do Mux6
-	if (selM6 == sULA) M6 = resultadoUla.fr;// TODO: Talvez o auxFR deva ser o valor do FR //**Sempre recebe flags da ULA
-	else if (selM6 == sDATA_OUT) M6 = DATA_OUT; //** A menos que seja POP FR, quando recebe da Memoria
+	if (mux[M6].selecao == ULA) mux[M6].dado = resultadoUla.fr;// TODO: Talvez o auxFR deva ser o valor do FR //**Sempre recebe flags da ULA
+	else if (mux[M6].selecao == DADO_SAIDA) mux[M6].dado = DATA_OUT; //** A menos que seja POP FR, quando recebe da Memoria
 
 	goto loop;
 
