@@ -2,6 +2,7 @@
 #define FLAG_H
 
 #include <stdbool.h>
+#include "operacao.h"
 
 typedef struct RegistradorFlag {
     bool flags[TAMANHO_PALAVRA];

@@ -26,9 +26,9 @@ enum Selecao {
     SP    = 3,
 
     // Mux 2
-    ULA        = 0,
-    DADO_SAIDA = 1,
-    TECLADO    = 4,
+    ULA     = 0,
+    MEMORIA = 1,
+    TECLADO = 4,
 
     // Mux 3
     FR = 8,
@@ -39,5 +39,7 @@ enum Selecao {
     // Mux 5
     MUX_3 = 1
 };
+
+void cria_mux(mux_t mux[]);
 
 #endif // MUX_H

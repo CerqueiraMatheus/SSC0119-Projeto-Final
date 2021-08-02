@@ -11,3 +11,21 @@ void cria_registradores(registrador_t registradores[]) {
         registradores[i] = cria_registrador();
     }
 }
+
+void reseta_sinais_registrador(registrador_t *registrador) {
+    registrador->incrementa = false;
+    registrador->decrementa = false;
+    registrador->load = false;
+}
+
+void atualiza_registrador(registrador_t *registrador, unsigned int valor_load) {
+    if (registrador->load) {
+        registrador->valor = valor_load;
+    }
+    if (registrador->incrementa) {
+        (registrador->valor)++;
+    }
+    if (registrador->decrementa) {
+        (registrador->valor)--;
+    }
+}
