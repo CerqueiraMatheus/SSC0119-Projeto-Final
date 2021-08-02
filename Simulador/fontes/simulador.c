@@ -1,12 +1,3 @@
-// Estados do Processador
-#define STATE_RESET 0
-#define STATE_FETCH 1
-#define STATE_DECODE 2
-#define STATE_EXECUTE 3
-#define STATE_EXECUTE2 4
-#define STATE_HALTED 5
-//----------------
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,6 +8,7 @@
 #include "memoria.h"
 #include "teclado.h"
 #include "flag.h"
+#include "cpu.h"
 #include "ula.h"
 #include "mux.h"
 
@@ -50,7 +42,7 @@ int main()
 	int carry=0;// Flag do IR que indica se a ULA vai fazer operação com carry ou não 
 	int opcode=0;
 	int temp=0;
-	unsigned char state=0; // reset
+	estado_t estado = RESETA;
 	int OP=0;  // ULA
 	int tecla;
 	resultado_ula_t resultadoUla;
@@ -63,7 +55,7 @@ inicio:
 	printf("                          'q' goto fim...\n\n");
 	printf("Rodando...\n");
 
-	state = STATE_RESET;
+	estado = RESETA;
 
 	// Loop principal do processador: Nunca para!!
 loop:
@@ -120,9 +112,9 @@ loop:
 
 
 	// Maquina de Controle
-	switch(state)
+	switch(estado)
 	{
-		case STATE_RESET:
+		case RESETA:
 			// Reinicializa os registradores
 			for(i=0;i<8;i++) {
 				registradores[i].valor = 0;
@@ -155,10 +147,10 @@ loop:
 			mux[M6].selecao   = ULA;
 
 			// -----------------------------
-			state=STATE_FETCH;
+			estado=BUSCA;
 			break;
 
-		case STATE_FETCH:
+		case BUSCA:
 			// ----- Ciclo de Busca: --------
 			//IR = MEMORY[PC];
 
@@ -168,10 +160,10 @@ loop:
 			pc.incrementa = true;
 
 			// ----------- -- ---------------
-			state=STATE_DECODE;
+			estado=DECODIFICA;
 			break;
 
-		case STATE_DECODE:
+		case DECODIFICA:
 
 			// Case das instrucoes
 			opcode = pega_pedaco(ir.valor, 15, 10);
@@ -190,13 +182,13 @@ loop:
 					registradores[rx].load = true;
 
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case OUTCHAR:
 					printf("%c", registradores[rx].valor);
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case LOADN:
@@ -208,7 +200,7 @@ loop:
 					registradores[rx].load = true;
 					pc.incrementa = true;
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case LOAD:
@@ -219,14 +211,14 @@ loop:
 					mar.load = true;
 					pc.incrementa = true;
 					// -----------------------------
-					state=STATE_EXECUTE;
+					estado=EXECUTA_1;
 					break;
 
 				case LOADI:
 					// reg[rx] = MEMORY[reg[ry]];
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case STORE:
@@ -234,20 +226,20 @@ loop:
 					//PC++;
 					
 					// -----------------------------
-					state=STATE_EXECUTE;
+					estado=EXECUTA_1;
 					break;
 
 				case STOREI:
 					//mem[reg[rx]] = reg[ry];
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case MOV:
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case ADD:
@@ -262,21 +254,21 @@ loop:
 					// reg[rx] = reg[ry] + reg[rz]; // Soma ou outra operacao
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case INC:
 					//reg[rx]++;                                  // Inc Rx ou DEC
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case CMP:   // seta 3 flags: maior, menor ou igual
 					//if(rx == ry)
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case SHIFT:
@@ -314,7 +306,7 @@ loop:
 					}
 
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case JMP:
@@ -344,67 +336,67 @@ loop:
 						//PC++;
 						pc.incrementa = true;
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case CALL:
 					
-					state=STATE_FETCH;
+					estado=BUSCA;
 					// -----------------------------
 					break;
 
 				case PUSH:
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case POP:
 					//SP++;
 					
 					// -----------------------------
-					state=STATE_EXECUTE;
+					estado=EXECUTA_1;
 					break;
 
 				case RTS:
 					// SP++;
 					
 					// -----------------------------
-					state=STATE_EXECUTE;
+					estado=EXECUTA_1;
 					break;
 
 				case SETC:
 					fr[4] = pega_pedaco(ir.valor, 9, 9);
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case HALT:        
 					// -----------------------------
-					state=STATE_HALTED;
+					estado=ESPERA;
 					break;
 
 				case NOP:         
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case BREAKP: 
 					key = getchar(); 
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				default:
 
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 			}
 			// -----------------------------
-			//state=STATE_EXECUTE;
+			//estado=EXECUTA_1;
 			break;
 
-		case STATE_EXECUTE:
+		case EXECUTA_1:
 			// -----------------------------
 			switch(opcode){
 				case LOAD:
@@ -414,7 +406,7 @@ loop:
 					mux[M2].selecao = DADO_SAIDA;
 					registradores[rx].load = true;
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 				case STORE:
@@ -424,7 +416,7 @@ loop:
 					mux[M3].selecao = rx;
 					mux[M5].selecao = MUX_3;
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break; 
 
 				case CALL:
@@ -432,44 +424,44 @@ loop:
 					RW = 0;
 					pc.load = true;
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break; 
 
 				case POP:
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break; 
 
 				case RTS:
 					//PC = MEMORY[SP];
 					
 					// -----------------------------
-					state=STATE_EXECUTE2;
+					estado=EXECUTA_2;
 					break;
 
 				case PUSH:
 					
 					// -----------------------------
-					state=STATE_FETCH;
+					estado=BUSCA;
 					break;
 
 
 			}
 
-			//state=STATE_EXECUTE2;
+			//estado=EXECUTA_2;
 			break;
 
-		case STATE_EXECUTE2:
+		case EXECUTA_2:
 
 			//case RTS:
 			//PC++;
 			
 			// -----------------------------
-			state=STATE_FETCH;
+			estado=BUSCA;
 			break;
 
-		case STATE_HALTED:
+		case ESPERA:
 			printf("\n");
 			key = getchar();
 			if (key == 'r') goto inicio;
