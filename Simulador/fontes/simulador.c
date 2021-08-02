@@ -1,16 +1,3 @@
-// gcc simple_simulator.c -O3 -march=native -o simulador -Wall -lm
-// -lm is option to execute math.h library file.
-/*
-Perguntas:
-1) O que tenho que fazer?
-2) Onde começa?
-3) Onde Termina?
-4) Qual é o caminho?
-Do todos os comandos...
-5) Acabou??
-6) E o PC ????????
-*/
-
 // Estados do Processador
 #define STATE_RESET 0
 #define STATE_FETCH 1
@@ -20,10 +7,12 @@ Do todos os comandos...
 #define STATE_HALTED 5
 //----------------
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
+#include "registrador.h"
 #include "operacao.h"
 #include "memoria.h"
 #include "teclado.h"
@@ -33,7 +22,6 @@ Do todos os comandos...
 
 
 unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
-int reg[8]; // 8 registradores
 
 int fr[16] = {0};  // Flag Register: <...|Negativo|StackUnderflow|StackOverflow|DivByZero|ArithmeticOverflow|carry|zero|equal|lesser|greater>
 
@@ -41,8 +29,17 @@ int main()
 {
 	int i=0;
 	int key=0;    // Le Teclado
-	int pc=0, ir=0, sp=0, mar=0, rx=0, ry=0, rz=0, COND=0, RW=0, DATA_OUT=0;
-	int LoadPC=0, IncPC=0, LoadIR=0, LoadSP=0, IncSP=0, DecSP=0, LoadMAR=0, LoadFR=0;
+
+	registrador_t registradores[NUMERO_REGISTRADORES];
+	cria_registradores(registradores);
+
+	registrador_t pc = cria_registrador();
+	registrador_t ir = cria_registrador();
+	registrador_t sp = cria_registrador();
+	registrador_t mar = cria_registrador();
+
+	int rx=0, ry=0, rz=0, COND=0, RW=0, DATA_OUT=0;
+	int LoadFR=0;
 
 	mux_t mux[NUMERO_MUX];
 	for (int i = 0; i < NUMERO_MUX; i++) {
@@ -50,7 +47,6 @@ int main()
 		mux[i].selecao = 0;
 	}
 
-	int LoadReg[8] = {0};
 	int carry=0;// Flag do IR que indica se a ULA vai fazer operação com carry ou não 
 	int opcode=0;
 	int temp=0;
@@ -75,31 +71,31 @@ loop:
 	//key = getchar();   
 
 	// Executa Load dos Registradores
-	if(LoadIR) ir = DATA_OUT;
+	if(ir.load) ir.valor = DATA_OUT;
 
-	if(LoadPC) pc = DATA_OUT;
+	if(pc.load) pc.valor = DATA_OUT;
 
-	if(IncPC) pc++;
+	if(pc.incrementa) pc.valor++;
 
-	if(LoadMAR) mar = DATA_OUT;
+	if(mar.load) mar.valor = DATA_OUT;
 
-	if(LoadSP) sp = mux[M4].valor;
+	if(sp.load) sp.valor = mux[M4].valor;
 
-	if(IncSP) sp++;
+	if(sp.incrementa) sp.valor++;
 
-	if(DecSP) sp--;
+	if(sp.decrementa) sp.valor--;
 
 	if(LoadFR)
 		for(i=16; i--; )              // Converte o int M6 para o vetor FR
 			fr[i] = pega_pedaco(mux[M6].valor, i, i); //  Tem que trasformar em Vetor
 
 	// Carrega dados do Mux 2 para os registradores
-	rx = pega_pedaco(ir,9,7);
-	ry = pega_pedaco(ir,6,4);
-	rz = pega_pedaco(ir,3,1);
+	rx = pega_pedaco(ir.valor, 9, 7);
+	ry = pega_pedaco(ir.valor, 6, 4);
+	rz = pega_pedaco(ir.valor, 3, 1);
 	
 	// Coloca valor do Mux2 para o registrador com Load
-	if(LoadReg[rx]) reg[rx] = mux[M2].valor;
+	if(registradores[rx].load) registradores[rx].valor = mux[M2].valor;
 
 	// Operacao de Escrita da Memoria
 	if (RW == 1) MEMORY[mux[M1].valor] = mux[M5].valor;
@@ -107,18 +103,19 @@ loop:
 	// ---------------------------------------
 
 	// Reinicializa os Loads dos registradores
-	for(i=0;i<8;i++)
-		LoadReg[i] = 0;
+	for(i = 0; i < NUMERO_REGISTRADORES; i++) {
+		registradores[i].load = false;
+	}
 
 	RW = 0;
 
-	LoadIR  = 0;
-	LoadMAR = 0;
-	LoadPC  = 0;
-	IncPC   = 0;
-	LoadSP  = 0;
-	IncSP   = 0;
-	DecSP   = 0;
+	ir.load  = false;
+	mar.load = false;
+	pc.load  = false;
+	pc.incrementa   = false;
+	sp.load  = false;
+	sp.incrementa   = false;
+	sp.decrementa   = false;
 	LoadFR  = 0;
 
 
@@ -128,27 +125,27 @@ loop:
 		case STATE_RESET:
 			// Reinicializa os registradores
 			for(i=0;i<8;i++) {
-				reg[i] = 0;
-				LoadReg[i] = 0;
+				registradores[i].valor = 0;
+				registradores[i].load = false;
 			}
 			for(i=0;i<16;i++)
 				fr[i] = 0;
 
-			pc = 0;  // inicializa na linha Zero da memoria -> Programa tem que comecar na linha Zero !!
-			ir = 0;
-			mar = 0;
-			sp = TAMANHO_MEMORIA -1;
+			pc.valor = 0;  // inicializa na linha Zero da memoria -> Programa tem que comecar na linha Zero !!
+			ir.valor = 0;
+			mar.valor = 0;
+			sp.valor = TAMANHO_MEMORIA -1;
 
 			RW = 0;
 			DATA_OUT = 0;  // Barramento de saida de Dados da Memoria
 
-			LoadIR  = 0;
-			LoadMAR = 0;
-			LoadPC  = 0;
-			IncPC   = 0;
-			LoadSP  = 0;
-			IncSP   = 0;
-			DecSP   = 0;
+			ir.load  = false;
+			mar.load = false;
+			pc.load  = false;
+			pc.incrementa   = false;
+			sp.load  = false;
+			sp.incrementa   = false;
+			sp.decrementa   = false;
 			LoadFR  = 0;
 			mux[M1].selecao   = PC;
 			mux[M2].selecao   = DADO_SAIDA;
@@ -167,8 +164,8 @@ loop:
 
 			mux[M1].selecao = PC;
 			RW = 0;
-			LoadIR = 1;
-			IncPC = 1;
+			ir.load = true;
+			pc.incrementa = true;
 
 			// ----------- -- ---------------
 			state=STATE_DECODE;
@@ -177,7 +174,7 @@ loop:
 		case STATE_DECODE:
 
 			// Case das instrucoes
-			opcode = pega_pedaco(ir,15,10);
+			opcode = pega_pedaco(ir.valor, 15, 10);
 
 			switch(opcode){
 				case INCHAR:
@@ -190,14 +187,14 @@ loop:
 
 					tecla = pega_pedaco(tecla,7,0);
 					mux[M2].selecao = TECLADO;
-					LoadReg[rx] = 1;
+					registradores[rx].load = true;
 
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
 
 				case OUTCHAR:
-					printf("%c", reg[rx]);
+					printf("%c", registradores[rx].valor);
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -208,8 +205,8 @@ loop:
 					mux[M1].selecao = PC;
 					RW = 0;
 					mux[M2].selecao = DADO_SAIDA;
-					LoadReg[rx] = 1;
-					IncPC = 1;
+					registradores[rx].load = true;
+					pc.incrementa = true;
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -219,8 +216,8 @@ loop:
 					// PC++;
 					mux[M1].selecao = PC;
 					RW = 0;
-					LoadMAR = 1; 
-					IncPC = 1;
+					mar.load = true;
+					pc.incrementa = true;
 					// -----------------------------
 					state=STATE_EXECUTE;
 					break;
@@ -284,28 +281,44 @@ loop:
 
 				case SHIFT:
 
-					switch(pega_pedaco(ir,6,4))
-					{   case 0: reg[rx] = reg[rx] << pega_pedaco(ir,3,0);           break;
-						case 1: reg[rx] = ~((~(reg[rx]) << pega_pedaco(ir,3,0)));   break;
-						case 2: reg[rx] = reg[rx] >> pega_pedaco(ir,3,0);           break;
-						case 3: reg[rx] = ~((~(reg[rx]) >> pega_pedaco(ir,3,0)));   break;
+					switch(pega_pedaco(ir.valor, 6, 4))
+					{
+						case 0: 
+							registradores[rx].valor = registradores[rx].valor << pega_pedaco(ir.valor, 3, 0);
+							break;
+						
+						case 1:
+							registradores[rx].valor = ~(~(registradores[rx].valor) << pega_pedaco(ir.valor, 3, 0));
+							break;
+						
+						case 2:
+							registradores[rx].valor = registradores[rx].valor >> pega_pedaco(ir.valor, 3, 0);
+							break;
+						
+						case 3:
+							registradores[rx].valor = ~(~(registradores[rx].valor) >> pega_pedaco(ir.valor,3,0));
+							break;
+						
 						default:
-								if(pega_pedaco(ir,6,5)==2) // ROTATE LEFT
-									reg[rx] = rotaciona_esquerda(reg[rx],pega_pedaco(ir,3,0));
-								else
-									reg[rx] = rotaciona_direita(reg[rx],pega_pedaco(ir,3,0)); 
+								if(pega_pedaco(ir.valor, 6, 5) == 2) { // ROTATE LEFT
+									registradores[rx].valor = rotaciona_esquerda(registradores[rx].valor, pega_pedaco(ir.valor, 3, 0));
+								}
+								else {
+									registradores[rx].valor = rotaciona_direita(registradores[rx].valor, pega_pedaco(ir.valor, 3, 0)); 
+								}
 								break;
 					}
 					fr[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
-					if(reg[rx] == 0)
+					if(registradores[rx].valor == 0) {
 						fr[3] = 1;  // Se resultado = 0, seta o Flag de Zero
+					}
 
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
 
 				case JMP:
-					COND = pega_pedaco(ir,9,6);
+					COND = pega_pedaco(ir.valor, 9, 6);
 
 					if((COND == 0)                       	                      // NO COND
 							|| (fr[0]==1 && (COND==7))                            // GREATER
@@ -325,11 +338,11 @@ loop:
 					{ // PC = MEMORY[PC];
 						mux[M1].selecao = PC;
 						RW = 0;
-						LoadPC = 1;
+						pc.load = true;
 					}
 					else
 						//PC++;
-						IncPC = 1;
+						pc.incrementa = true;
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -361,7 +374,7 @@ loop:
 					break;
 
 				case SETC:
-					fr[4] = pega_pedaco(ir,9,9);
+					fr[4] = pega_pedaco(ir.valor, 9, 9);
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -399,7 +412,7 @@ loop:
 					mux[M1].selecao = MAR;
 					RW = 0;
 					mux[M2].selecao = DADO_SAIDA;
-					LoadReg[rx] = 1;
+					registradores[rx].load = true;
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -417,7 +430,7 @@ loop:
 				case CALL:
 					mux[M1].selecao = PC;
 					RW = 0;
-					LoadPC = 1;
+					pc.load = true;
 					// -----------------------------
 					state=STATE_FETCH;
 					break; 
@@ -469,13 +482,13 @@ loop:
 
 	// Selecao do Mux4   --> Tem que vir antes do M1 e do M2 que usam M4
 	if(mux[M4].selecao == 8) mux[M4].valor = 1;  // Seleciona 1 para fazer INC e DEC
-	else mux[M4].valor = reg[mux[M4].selecao]; 
+	else mux[M4].valor = registradores[mux[M4].selecao].valor; 
 
 	// Selecao do Mux1
-	if      (mux[M1].selecao == PC)  mux[M1].valor = pc;
-	else if (mux[M1].selecao == MAR) mux[M1].valor = mar;
+	if      (mux[M1].selecao == PC)  mux[M1].valor = pc.valor;
+	else if (mux[M1].selecao == MAR) mux[M1].valor = mar.valor;
 	else if (mux[M1].selecao == MUX_4)  mux[M1].valor = mux[M4].valor;
-	else if (mux[M1].selecao == SP)  mux[M1].valor = sp;
+	else if (mux[M1].selecao == SP)  mux[M1].valor = sp.valor;
 
 	if(mux[M1].valor > TAMANHO_MEMORIA) {
 		printf("  \n\nUltrapassou limite da memoria, coloque um jmp no fim do código\n");
@@ -493,7 +506,7 @@ loop:
 		temp = temp + (int) (fr[i] * (pow(2.0,i))); 
 
 	if(mux[M3].selecao == FR) mux[M3].valor = temp;  // Seleciona com 8 o FR
-	else mux[M3].valor = reg[mux[M3].selecao]; 
+	else mux[M3].valor = registradores[mux[M3].selecao].valor; 
 
 	// Operacao da ULA
 	resultadoUla = ula(mux[M3].valor, mux[M4].valor, fr[CARRY], carry, OP);
@@ -503,10 +516,10 @@ loop:
 	else if (mux[M2].selecao == DADO_SAIDA) mux[M2].valor = DATA_OUT;
 	else if (mux[M2].selecao == MUX_4)  mux[M2].valor = mux[M4].valor;
 	//else if (selM2 == sTECLADO) M2 = TECLADO;// TODO: selM2 com teclado
-	else if (mux[M2].selecao == SP)  mux[M2].valor = sp;
+	else if (mux[M2].selecao == SP)  mux[M2].valor = sp.valor;
 
 	// Selecao do Mux5
-	if (mux[M5].selecao == PC) mux[M5].valor = pc;
+	if (mux[M5].selecao == PC) mux[M5].valor = pc.valor;
 	else if (mux[M5].selecao == MUX_3) mux[M5].valor = mux[M3].valor;
 
 	// Selecao do Mux6
