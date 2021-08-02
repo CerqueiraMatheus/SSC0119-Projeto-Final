@@ -46,7 +46,7 @@ int main()
 
 	mux_t mux[NUMERO_MUX];
 	for (int i = 0; i < NUMERO_MUX; i++) {
-		mux[i].dado = 0;
+		mux[i].valor = 0;
 		mux[i].selecao = 0;
 	}
 
@@ -83,7 +83,7 @@ loop:
 
 	if(LoadMAR) mar = DATA_OUT;
 
-	if(LoadSP) sp = mux[M4].dado;
+	if(LoadSP) sp = mux[M4].valor;
 
 	if(IncSP) sp++;
 
@@ -91,7 +91,7 @@ loop:
 
 	if(LoadFR)
 		for(i=16; i--; )              // Converte o int M6 para o vetor FR
-			fr[i] = pega_pedaco(mux[M6].dado, i, i); //  Tem que trasformar em Vetor
+			fr[i] = pega_pedaco(mux[M6].valor, i, i); //  Tem que trasformar em Vetor
 
 	// Carrega dados do Mux 2 para os registradores
 	rx = pega_pedaco(ir,9,7);
@@ -99,10 +99,10 @@ loop:
 	rz = pega_pedaco(ir,3,1);
 	
 	// Coloca valor do Mux2 para o registrador com Load
-	if(LoadReg[rx]) reg[rx] = mux[M2].dado;
+	if(LoadReg[rx]) reg[rx] = mux[M2].valor;
 
 	// Operacao de Escrita da Memoria
-	if (RW == 1) MEMORY[mux[M1].dado] = mux[M5].dado;
+	if (RW == 1) MEMORY[mux[M1].valor] = mux[M5].valor;
 
 	// ---------------------------------------
 
@@ -468,22 +468,22 @@ loop:
 	}
 
 	// Selecao do Mux4   --> Tem que vir antes do M1 e do M2 que usam M4
-	if(mux[M4].selecao == 8) mux[M4].dado = 1;  // Seleciona 1 para fazer INC e DEC
-	else mux[M4].dado = reg[mux[M4].selecao]; 
+	if(mux[M4].selecao == 8) mux[M4].valor = 1;  // Seleciona 1 para fazer INC e DEC
+	else mux[M4].valor = reg[mux[M4].selecao]; 
 
 	// Selecao do Mux1
-	if      (mux[M1].selecao == PC)  mux[M1].dado = pc;
-	else if (mux[M1].selecao == MAR) mux[M1].dado = mar;
-	else if (mux[M1].selecao == MUX_4)  mux[M1].dado = mux[M4].dado;
-	else if (mux[M1].selecao == SP)  mux[M1].dado = sp;
+	if      (mux[M1].selecao == PC)  mux[M1].valor = pc;
+	else if (mux[M1].selecao == MAR) mux[M1].valor = mar;
+	else if (mux[M1].selecao == MUX_4)  mux[M1].valor = mux[M4].valor;
+	else if (mux[M1].selecao == SP)  mux[M1].valor = sp;
 
-	if(mux[M1].dado > TAMANHO_MEMORIA) {
+	if(mux[M1].valor > TAMANHO_MEMORIA) {
 		printf("  \n\nUltrapassou limite da memoria, coloque um jmp no fim do código\n");
 		exit(1);
 	}
 
 	// Operacao de Leitura da Memoria
-	if (RW == 0) DATA_OUT = MEMORY[mux[M1].dado];  // Tem que vir antes do M2 que usa DATA_OUT
+	if (RW == 0) DATA_OUT = MEMORY[mux[M1].valor];  // Tem que vir antes do M2 que usa DATA_OUT
 
 	// Selecao do Mux3  --> Tem que vir antes da ULA e do M5
 	// Converte o vetor FR para int
@@ -492,26 +492,26 @@ loop:
 	for(i=16; i--; )        
 		temp = temp + (int) (fr[i] * (pow(2.0,i))); 
 
-	if(mux[M3].selecao == FR) mux[M3].dado = temp;  // Seleciona com 8 o FR
-	else mux[M3].dado = reg[mux[M3].selecao]; 
+	if(mux[M3].selecao == FR) mux[M3].valor = temp;  // Seleciona com 8 o FR
+	else mux[M3].valor = reg[mux[M3].selecao]; 
 
 	// Operacao da ULA
-	resultadoUla = ula(mux[M3].dado, mux[M4].dado, fr[CARRY], carry, OP);
+	resultadoUla = ula(mux[M3].valor, mux[M4].valor, fr[CARRY], carry, OP);
 
 	// Selecao do Mux2
-	if      (mux[M2].selecao == ULA) mux[M2].dado = resultadoUla.valor;
-	else if (mux[M2].selecao == DADO_SAIDA) mux[M2].dado = DATA_OUT;
-	else if (mux[M2].selecao == MUX_4)  mux[M2].dado = mux[M4].dado;
+	if      (mux[M2].selecao == ULA) mux[M2].valor = resultadoUla.valor;
+	else if (mux[M2].selecao == DADO_SAIDA) mux[M2].valor = DATA_OUT;
+	else if (mux[M2].selecao == MUX_4)  mux[M2].valor = mux[M4].valor;
 	//else if (selM2 == sTECLADO) M2 = TECLADO;// TODO: selM2 com teclado
-	else if (mux[M2].selecao == SP)  mux[M2].dado = sp;
+	else if (mux[M2].selecao == SP)  mux[M2].valor = sp;
 
 	// Selecao do Mux5
-	if (mux[M5].selecao == PC) mux[M5].dado = pc;
-	else if (mux[M5].selecao == MUX_3) mux[M5].dado = mux[M3].dado;
+	if (mux[M5].selecao == PC) mux[M5].valor = pc;
+	else if (mux[M5].selecao == MUX_3) mux[M5].valor = mux[M3].valor;
 
 	// Selecao do Mux6
-	if (mux[M6].selecao == ULA) mux[M6].dado = resultadoUla.fr;// TODO: Talvez o auxFR deva ser o valor do FR //**Sempre recebe flags da ULA
-	else if (mux[M6].selecao == DADO_SAIDA) mux[M6].dado = DATA_OUT; //** A menos que seja POP FR, quando recebe da Memoria
+	if (mux[M6].selecao == ULA) mux[M6].valor = resultadoUla.fr;// TODO: Talvez o auxFR deva ser o valor do FR //**Sempre recebe flags da ULA
+	else if (mux[M6].selecao == DADO_SAIDA) mux[M6].valor = DATA_OUT; //** A menos que seja POP FR, quando recebe da Memoria
 
 	goto loop;
 

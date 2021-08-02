@@ -4,7 +4,7 @@
 #define NUMERO_MUX 6
 
 typedef struct Mux {
-    unsigned int dado;
+    unsigned int valor;
     int selecao;
 }
 mux_t;
