@@ -13,12 +13,13 @@
 #include "mux.h"
 
 
-unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
-
 int fr[16] = {0};  // Flag Register: <...|Negativo|StackUnderflow|StackOverflow|DivByZero|ArithmeticOverflow|carry|zero|equal|lesser|greater>
 
 int main()
 {
+	unsigned int memoria[TAMANHO_MEMORIA];
+	le_arquivo_memoria(memoria);
+	
 	int i=0;
 	int key=0;    // Le Teclado
 
@@ -47,7 +48,6 @@ int main()
 	int tecla;
 	resultado_ula_t resultadoUla;
 
-	le_arquivo_memoria(MEMORY);
 
 inicio:
 	printf("PROCESSADOR ICMC  - Menu:\n");
@@ -59,9 +59,6 @@ inicio:
 
 	// Loop principal do processador: Nunca para!!
 loop:
-
-	//key = getchar();   
-
 	// Executa Load dos Registradores
 	if(ir.load) ir.valor = DATA_OUT;
 
@@ -90,7 +87,7 @@ loop:
 	if(registradores[rx].load) registradores[rx].valor = mux[M2].valor;
 
 	// Operacao de Escrita da Memoria
-	if (RW == 1) MEMORY[mux[M1].valor] = mux[M5].valor;
+	if (RW == 1) memoria[mux[M1].valor] = mux[M5].valor;
 
 	// ---------------------------------------
 
@@ -152,7 +149,7 @@ loop:
 
 		case BUSCA:
 			// ----- Ciclo de Busca: --------
-			//IR = MEMORY[PC];
+			//IR = memoria[PC];
 
 			mux[M1].selecao = PC;
 			RW = 0;
@@ -204,7 +201,7 @@ loop:
 					break;
 
 				case LOAD:
-					// MAR = MEMORY[PC];
+					// MAR = memoria[PC];
 					// PC++;
 					mux[M1].selecao = PC;
 					RW = 0;
@@ -215,14 +212,14 @@ loop:
 					break;
 
 				case LOADI:
-					// reg[rx] = MEMORY[reg[ry]];
+					// reg[rx] = memoria[reg[ry]];
 					
 					// -----------------------------
 					estado=BUSCA;
 					break;
 
 				case STORE:
-					//MAR = MEMORY[PC];
+					//MAR = memoria[PC];
 					//PC++;
 					
 					// -----------------------------
@@ -327,7 +324,7 @@ loop:
 							|| (fr[5]==0 && (COND==12))                           // NOT OVERFLOW
 							|| (fr[6]==1 && (COND==14))                           // NEGATIVO
 							|| (fr[9]==1 && (COND==13)))                          // DIVBYZERO
-					{ // PC = MEMORY[PC];
+					{ // PC = memoria[PC];
 						mux[M1].selecao = PC;
 						RW = 0;
 						pc.load = true;
@@ -400,7 +397,7 @@ loop:
 			// -----------------------------
 			switch(opcode){
 				case LOAD:
-					//reg[rx] = MEMORY[MAR];
+					//reg[rx] = memoria[MAR];
 					mux[M1].selecao = MAR;
 					RW = 0;
 					mux[M2].selecao = DADO_SAIDA;
@@ -410,7 +407,7 @@ loop:
 					break;
 
 				case STORE:
-					//MEMORY[MAR] = reg[rx];
+					//memoria[MAR] = reg[rx];
 					mux[M1].selecao = MAR;
 					RW = 1;
 					mux[M3].selecao = rx;
@@ -434,7 +431,7 @@ loop:
 					break; 
 
 				case RTS:
-					//PC = MEMORY[SP];
+					//PC = memoria[SP];
 					
 					// -----------------------------
 					estado=EXECUTA_2;
@@ -488,7 +485,7 @@ loop:
 	}
 
 	// Operacao de Leitura da Memoria
-	if (RW == 0) DATA_OUT = MEMORY[mux[M1].valor];  // Tem que vir antes do M2 que usa DATA_OUT
+	if (RW == 0) DATA_OUT = memoria[mux[M1].valor];  // Tem que vir antes do M2 que usa DATA_OUT
 
 	// Selecao do Mux3  --> Tem que vir antes da ULA e do M5
 	// Converte o vetor FR para int
