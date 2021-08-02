@@ -49,6 +49,25 @@ typedef enum Operacao {
 }
 operacao_t;
 
+typedef enum Jump {
+    JUMP,
+    JEQ,
+    JNE,
+    JZ,
+    JNZ,
+    JC,
+    JNC,
+    JGR,
+    JLE,
+    JEG,
+    JEL,
+    JOV,
+    JNOV,
+    JN,
+    JDZ
+}
+jump_t;
+
 unsigned int pega_pedaco(unsigned int bits, int mais_significativo, int menos_significativo);
 
 #endif // OPERACAO_H

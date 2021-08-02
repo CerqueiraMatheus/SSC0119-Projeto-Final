@@ -27,7 +27,6 @@ int main() {
 
 	char tecla;
 
-
 inicio:
 	printf("PROCESSADOR ICMC  - Menu:\n");
 	printf("                          'r' goto inicio...\n");
@@ -88,7 +87,7 @@ loop:
 					break;
 
 				case OUTCHAR:
-					printf("%c", cpu.registradores[rx].valor);
+					putchar(cpu.registradores[rx].valor);
 
 					cpu.estado = BUSCA;
 					break;
@@ -132,15 +131,9 @@ loop:
 					cpu.estado = BUSCA;
 					break;
 
-				case ADD:
-				case SUB:
-				case MULT:
-				case DIV:
+				case AND ... NOT:
+				case ADD ... DIV:
 				case MOD:
-				case AND:
-				case OR:
-				case XOR:
-				case NOT:
 
 					cpu.estado = BUSCA;
 					break;
@@ -182,33 +175,32 @@ loop:
 								}
 								break;
 					}
-					cpu.fr.flags[3] = 0; // -- FR = <...|zero|equal|lesser|greater>
-					if(cpu.registradores[rx].valor == 0) {
-						cpu.fr.flags[3] = 1;  // Se resultado = 0, seta o Flag de Zero
-					}
+
+					cpu.fr.flags[ZERO] = cpu.registradores[rx].valor == 0;
 
 					cpu.estado = BUSCA;
 					break;
 
 				case JMP: ;
-					unsigned int condicao = pega_pedaco(cpu.ir.valor, 9, 6);
+					jump_t jump = pega_pedaco(cpu.ir.valor, 9, 6);
 
-					if((condicao == 0)                       	                      // NO condicao
-							|| (cpu.fr.flags[0]==1 && (condicao==7))                            // GREATER
-							|| ((cpu.fr.flags[2]==1 || cpu.fr.flags[0]==1) && (condicao==9))              // GREATER EQUAL
-							|| (cpu.fr.flags[1]==1 && (condicao==8))                            // LESSER
-							|| ((cpu.fr.flags[2]==1 || cpu.fr.flags[1]==1) && (condicao==10))             // LESSER EQUAL
-							|| (cpu.fr.flags[2]==1 && (condicao==1))                            // EQUAL
-							|| (cpu.fr.flags[2]==0 && (condicao==2))                            // NOT EQUAL
-							|| (cpu.fr.flags[3]==1 && (condicao==3))                            // ZERO
-							|| (cpu.fr.flags[3]==0 && (condicao==4))                            // NOT ZERO
-							|| (cpu.fr.flags[4]==1 && (condicao==5))                            // CARRY
-							|| (cpu.fr.flags[4]==0 && (condicao==6))                            // NOT CARRY
-							|| (cpu.fr.flags[5]==1 && (condicao==11))                           // OVERFLOW
-							|| (cpu.fr.flags[5]==0 && (condicao==12))                           // NOT OVERFLOW
-							|| (cpu.fr.flags[6]==1 && (condicao==14))                           // NEGATIVO
-							|| (cpu.fr.flags[9]==1 && (condicao==13)))                          // DIVBYZERO
-					{
+					if (
+						jump == JUMP
+						|| (jump == JEQ  &&  cpu.fr.flags[IGUAL])
+						|| (jump == JNE  && !cpu.fr.flags[IGUAL])
+						|| (jump == JZ   &&  cpu.fr.flags[ZERO])
+						|| (jump == JNZ  && !cpu.fr.flags[ZERO])
+						|| (jump == JC   &&  cpu.fr.flags[CARRY])
+						|| (jump == JNC  && !cpu.fr.flags[CARRY])
+						|| (jump == JGR  &&  cpu.fr.flags[MAIOR])
+						|| (jump == JLE  &&  cpu.fr.flags[MENOR])
+						|| (jump == JEG  && (cpu.fr.flags[IGUAL] || cpu.fr.flags[MAIOR]))
+						|| (jump == JEL  && (cpu.fr.flags[IGUAL] || cpu.fr.flags[MENOR]))
+						|| (jump == JOV  &&  cpu.fr.flags[OVERFLOW_ARITMETICO])
+						|| (jump == JNOV && !cpu.fr.flags[OVERFLOW_ARITMETICO])
+						|| (jump == JN 	 &&  cpu.fr.flags[NEGATIVO])
+						|| (jump == JDZ  &&  cpu.fr.flags[DIVISAO_POR_ZERO])
+					) {
 						cpu.mux[M1].selecao = PC;
 						rw = LEITURA;
 						cpu.pc.load = true;
@@ -241,7 +233,7 @@ loop:
 					break;
 
 				case SETC:
-					cpu.fr.flags[4] = pega_pedaco(cpu.ir.valor, 9, 9);
+					cpu.fr.flags[CARRY] = pega_pedaco(cpu.ir.valor, 9, 9);
 
 					cpu.estado = BUSCA;
 					break;
@@ -324,7 +316,7 @@ loop:
 			break;
 
 		case ESPERA:
-			printf("\n");
+			putchar('\n');
 			char key = getchar();
 			if (key == 'r') goto inicio;
 			if (key == 'q') goto fim;
