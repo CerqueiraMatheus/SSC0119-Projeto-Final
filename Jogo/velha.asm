@@ -7,31 +7,31 @@ tabuleiro : var #9
 
 
 main:
-	call cria_tabuleiro
-	
-	loadn r0, #tabuleiro
-	loadn r1, #8
-	add r0, r0, r1
-	
-	loadi r2, r0
-	loadn r3, #0
-	outchar r2, r3
+	call le_caractere
+	call caractere_para_digito
+	loadn r1, #0
+	loadn r2, #'A'
+	add r0, r0, r2
+	outchar r0, r1
 
 	halt
 
 
-; Jogador
+; JOGADOR
 
 cria_jogador:
+	push fr
 	push r0
 	
 	loadn r0, #'X'					;
 	store jogador, r0				; jogador := 'X'
 	
 	pop r0
+	pop fr
 	rts
 
 troca_jogador:
+	push fr
 	push r0
 	push r1
 	
@@ -46,17 +46,19 @@ troca_jogador__fim:					;
 	
 	pop r1
 	pop r0
+	pop fr
 	rts
 
 
-; Tabuleiro
+; TABULEIRO
 
 cria_tabuleiro:
+	push fr
 	push r0
 	push r1
 	push r2
 	
-	loadn r0, #'A'					;
+	loadn r0, #' '					;
 	loadn r1, #tabuleiro			; posição := tabuleiro
 	loadn r2, #9					;
 	add r2, r2, r1					; última := posição + 9
@@ -70,4 +72,40 @@ cria_tabuleiro__loop:				; faça:
 	pop r2
 	pop r1
 	pop r0
+	pop fr
+	rts
+
+
+; CARACTERE
+
+; Retorno:
+; r0 - caractere
+le_caractere:
+	push fr
+	push r1
+	
+	loadn r1, #255					; VAZIO := 255
+									;
+le_caractere__loop:					; faça:
+	inchar r0						;     caractere := entrada()
+	cmp r0, r1						;
+	jeq le_caractere__loop			; enquanto caractere = VAZIO
+	
+	pop r1
+	pop fr
+	rts
+
+; Parâmetros:
+; r0 - caractere
+; Retorno:
+; r0 - digito
+caractere_para_digito:
+	push fr
+	push r1
+	
+	loadn r1, #'0'					;
+	sub r0, r0, r1					; retorna caractere - '0'
+	
+	pop r1
+	pop fr
 	rts
