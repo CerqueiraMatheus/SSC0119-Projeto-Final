@@ -49,7 +49,7 @@ executa_jogada__loop:				; repita:
 	load r1, digito_valido			;
 	cmp r0, r1						;
 	jne executa_jogada__loop		;     se digito_valido = falso:
-									;         continua
+									;         continue
 	call caractere_para_digito		;     digito := caracter_para_digito(caracter)
 	call digito_para_posicao		;     posicao := digito_para_posicao(digito)
 									;
@@ -74,6 +74,11 @@ checa_vencedor:
 	loadn r0, #' '
 	
 	call checa_linhas
+	load r1, vencedor
+	cmp r0, r1
+	jne checa_vencedor__fim
+	
+	call checa_colunas
 	load r1, vencedor
 	cmp r0, r1
 	jne checa_vencedor__fim
@@ -109,17 +114,17 @@ checa_linhas__loop:					; repita:
 									;
 	loadi r6, r5					;     primeira := tabuleiro[i + 0]
 	cmp r1, r6						;     se primeira = ' ':
-	jeq checa_linhas__inc			;         continua
+	jeq checa_linhas__inc			;         continue
 									;
 	inc r5							;
 	loadi r7, r5					;     segunda := tabuleiro[i + 1]
 	cmp r6, r7						;     se primeira != segunda:
-	jne checa_linhas__inc			;         continua
+	jne checa_linhas__inc			;         continue
 									;
 	inc r5							;
 	loadi r7, r5					;     terceira := tabuleiro[i + 2]
 	cmp r6, r7						;     se primeira != terceira:
-	jne checa_linhas__inc			;         continua
+	jne checa_linhas__inc			;         continue
 									;
 	mov r0, r6						;     vencedor := primeira
 									;
@@ -128,11 +133,62 @@ checa_linhas__inc:					;
 	cmp r4, r3						;
 	jle checa_linhas__loop			; enquanto i < 9
 									;
-									;
-checa_linhas__fim:					;
 	store vencedor, r0				;
 	
 	pop r7
+	pop r6
+	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+checa_colunas:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	push r4
+	push r5
+	push r6
+	
+	loadn r0, #' '					; vencedor := ' '
+	loadn r1, #' '					;
+	loadn r2, #3					;
+	loadn r3, #0					; i = 0
+									;
+checa_colunas__loop:				; repita:
+	loadn r4, #tabuleiro			;
+	add r4, r4, r3					;
+									;
+	loadi r5, r4					;     primeira := tabuleira[i + 0]
+	cmp r1, r5						;     se primeira = ' ':
+	jeq checa_colunas__inc			;         continue
+									;
+	add r4, r4, r2					;
+	loadi r6, r4					;     segunda := tabuleiro[i + 3]
+	cmp r5, r6						;     se primeira != segunda:
+	jne checa_colunas__inc			;         continue
+									;
+	add r4, r4, r2					;
+	loadi r6, r4					;     terceira := tabuleiro[i + 6]
+	cmp r5, r6						;     se primeira != terceira:
+	jne checa_colunas__inc			;         continue
+									;
+	mov r0, r5						;     vencedor := primeira
+									;
+checa_colunas__inc:					;
+	inc r3							;     i++
+	cmp r3, r2						;
+	jle checa_colunas__loop			; enquanto i < 3
+									;
+	store vencedor, r0				;
+	
 	pop r6
 	pop r5
 	pop r4
