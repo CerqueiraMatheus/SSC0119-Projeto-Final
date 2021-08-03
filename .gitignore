@@ -1,0 +1,542 @@
+
+Jogo/README.txt
+Jogo/Sublime Text 3/0_package_control_loader.sublime-package
+Jogo/Sublime Text 3/_ctypes.pyd
+Jogo/Sublime Text 3/_decimal.pyd
+Jogo/Sublime Text 3/_elementtree.pyd
+Jogo/Sublime Text 3/_hashlib.pyd
+Jogo/Sublime Text 3/_msi.pyd
+Jogo/Sublime Text 3/_multiprocessing.pyd
+Jogo/Sublime Text 3/_socket.pyd
+Jogo/Sublime Text 3/_ssl.pyd
+Jogo/Sublime Text 3/changelog.txt
+Jogo/Sublime Text 3/crash_reporter.exe
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/dependency-metadata.json
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st2_linux_x32/bz2.so
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st2_linux_x64/bz2.so
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st2_windows_x32/bz2.pyd
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st2_windows_x64/bz2.pyd
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st3_linux_x32/_bz2.cpython-33m.so
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st3_linux_x64/_bz2.cpython-33m.so
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st3_osx_x64/_bz2.so
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st3_windows_x32/_bz2.pyd
+Jogo/Sublime Text 3/Data/Backup/20210803111550/bz2/st3_windows_x64/_bz2.pyd
+Jogo/Sublime Text 3/Data/Cache/ActionScript/ActionScript.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/AppleScript/AppleScript.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/ASP/ASP.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/ASP/HTML-ASP.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Assembly ICMC/Assembly ICMC.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Batch File/Batch File.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Build.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/C#/C#.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Indentation.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Function.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Inner Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Inner Inner Region.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Inner Method.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Inner Region.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Method.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Inner Region.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Namespace.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C#/Symbol List Region.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/C++.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/C++/C.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Comments (C++).tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Indentation Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Symbol Index Hide Ctors.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Symbol Index.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Symbol List - Indent Class Methods.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Symbol List - Prefix Banner Items.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/C++/Symbol List Hide Forward Decls.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Clojure/Clojure.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Clojure/Comment.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Clojure/Symbol List.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Color Scheme - Default/Monokai.tmTheme.cache
+Jogo/Sublime Text 3/Data/Cache/CSS/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/CSS/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/CSS/CSS.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/CSS/Symbol Index.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/CSS/Symbol List Group.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/CSS/Symbol List.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/D/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/D/D.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/D/Indentation Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/D/Symbol List-Method-Constructor.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Icon (Markup).tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Icon (Source).tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Icon (Text).tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Ignored Packages.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Indentation Rules - Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Indentation Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Indexed Symbol List.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Meta Info Summary.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Startup.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Symbol List.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Default/Syntax Summary.cache
+Jogo/Sublime Text 3/Data/Cache/Diff/Diff.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Erlang.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Function Symbols.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/HTML (Erlang).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Indentation Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Macro Symbols.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Module Symbols.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Record Symbols.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Erlang/Symbol Overrides.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Go/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Go/Go.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Go/Indentation Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Graphviz/DOT.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Groovy/Groovy.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Groovy/Symbol List%3A Class Variables.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Groovy/Symbol List%3A Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Groovy/Symbol List%3A Methods.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Groovy/Symbol List%3A Variables.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Haskell/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Haskell/Haskell.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Haskell/Indent Patterns.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Haskell/Literate Haskell.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Haskell/Symbol List.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/HTML/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/HTML/HTML.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/HTML/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/HTML/Symbol List - ID.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Indentation Rules Annex.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Indentation Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Java Server Pages (JSP).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Java.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Java/JavaDoc.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Java/JavaProperties.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Symbol List%3A Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Symbol List%3A Inner Class Methods.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Symbol List%3A Inner Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Symbol List%3A Inner Inner Class Methods.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Symbol List%3A Inner Inner Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Java/Symbol List%3A Method.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/JavaScript Indent.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/JavaScript.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/JSON.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Symbol List Banned.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Symbol List Class.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Symbol List Function.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Symbol List Instance.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Symbol List Sub 1.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/JavaScript/Symbol List Sub 2.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/Bibtex.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/LaTeX Beamer.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/LaTeX Log.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/LaTeX Memoir.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/LaTeX.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/TeX Math.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/LaTeX/TeX.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Lisp/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Lisp/Lisp.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Lua/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Lua/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Lua/Indent.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Lua/Lua.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Makefile/Makefile.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Makefile/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Markdown/Indent%3A Raw.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Markdown/Markdown.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Markdown/MultiMarkdown.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Markdown/Symbol List - Heading.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Matlab/Indent.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Matlab/Matlab.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Matlab/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Matlab/Symbols.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Objective-C/Objective-C++.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Objective-C/Objective-C.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Objective-C/Symbol Index.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/camlp4.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Indent rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/OCaml.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/OCamllex.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/OCamlyacc.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Exceptions.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Ocamllex pattern definition.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Ocamllex pattern references.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Ocamllex rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Ocamlyacc non-terminal definition.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Ocamlyacc non-terminal reference.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Ocamlyacc token definition.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Ocamlyacc token reference.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Types.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List%3A Variants.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Classes.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Exceptions.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Ocamllex pattern definition.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Ocamllex pattern references.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Ocamllex rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Ocamlyacc non-terminal definition.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Ocamlyacc non-terminal reference.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Ocamlyacc token definition.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Ocamlyacc token reference.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Types.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/OCaml/Symbol List_ Variants.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Package Control/http_cache/01524fae79697630d0454ba3fabd9414
+Jogo/Sublime Text 3/Data/Cache/Package Control/http_cache/01524fae79697630d0454ba3fabd9414.info
+Jogo/Sublime Text 3/Data/Cache/Package Control/last_run.json
+Jogo/Sublime Text 3/Data/Cache/Pascal/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Pascal/Pascal.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Perl/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Perl/Perl.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/PHP/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/PHP/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/PHP/Indentation Rules Annex.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/PHP/Indentation Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/PHP/PHP.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/PHP/Symbol List.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Python/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Python/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Python/Python.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Python/Regular Expressions (Python).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Python/Symbol List Hide Decorator.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Python/Symbol List.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/R/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/R/Methods.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/R/R Console.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/R/R.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/R/Rd (R Documentation).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/R/Symbol List (Rd Documentation).tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/HTML (Rails).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/JavaScript (Rails).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/Ruby Haml Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/Ruby Haml.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/Ruby on Rails.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/SQL (Rails).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/Template (ERB).tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Rails/Template (Haml).tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Regular Expressions/RegExp.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/RestructuredText/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/RestructuredText/reStructuredText.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Ruby.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Symbo List%3A Method.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Symbol Index Methods.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Symbol Index.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Ruby/Symbol List%3A No Function Call.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Scala/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/Scala/Scala.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Scala/Symbols.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/ShellScript/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/ShellScript/Completion Rules.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/ShellScript/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/ShellScript/Shell-Unix-Generic.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/SQL/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/SQL/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/SQL/SQL.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/TCL/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/TCL/HTML (Tcl).tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/TCL/Tcl.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Text/Plain text.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Textile/Textile.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/Theme - Default/Widgets.stTheme.cache
+Jogo/Sublime Text 3/Data/Cache/XML/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/XML/Miscellaneous.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/XML/Symbol List%3A Templates.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/XML/XML.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/XML/XSL.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Cache/YAML/Comments.tmPreferences.cache
+Jogo/Sublime Text 3/Data/Cache/YAML/YAML.tmLanguage.cache
+Jogo/Sublime Text 3/Data/Index/000077.log
+Jogo/Sublime Text 3/Data/Index/CURRENT
+Jogo/Sublime Text 3/Data/Index/LOCK
+Jogo/Sublime Text 3/Data/Index/LOG
+Jogo/Sublime Text 3/Data/Index/LOG.old
+Jogo/Sublime Text 3/Data/Index/MANIFEST-000076
+Jogo/Sublime Text 3/Data/Installed Packages/0_package_control_loader.sublime-package
+Jogo/Sublime Text 3/Data/Installed Packages/All Autocomplete.sublime-package
+Jogo/Sublime Text 3/Data/Installed Packages/Package Control.sublime-package
+Jogo/Sublime Text 3/Data/KEEPME
+Jogo/Sublime Text 3/Data/Local/Auto Save Session.sublime_session
+Jogo/Sublime Text 3/Data/Local/Session.sublime_session
+Jogo/Sublime Text 3/Data/Packages/0_package_control_loader.sublime-package
+Jogo/Sublime Text 3/Data/Packages/bz2/dependency-metadata.json
+Jogo/Sublime Text 3/Data/Packages/bz2/package-control.reinstall
+Jogo/Sublime Text 3/Data/Packages/bz2/st3_windows_x64/_bz2.pyd.package-control-old
+Jogo/Sublime Text 3/Data/Packages/User/Package Control.sublime-settings
+Jogo/Sublime Text 3/Data/Packages/User/Preferences.sublime-settings
+Jogo/Sublime Text 3/msvcr100.dll
+Jogo/Sublime Text 3/Packages/__rzi_0.404
+Jogo/Sublime Text 3/Packages/ActionScript.sublime-package
+Jogo/Sublime Text 3/Packages/AppleScript.sublime-package
+Jogo/Sublime Text 3/Packages/ASP.sublime-package
+Jogo/Sublime Text 3/Packages/Assembly ICMC.sublime-package
+Jogo/Sublime Text 3/Packages/Batch File.sublime-package
+Jogo/Sublime Text 3/Packages/C#.sublime-package
+Jogo/Sublime Text 3/Packages/C++.sublime-package
+Jogo/Sublime Text 3/Packages/Clojure.sublime-package
+Jogo/Sublime Text 3/Packages/Color Scheme - Default.sublime-package
+Jogo/Sublime Text 3/Packages/CSS.sublime-package
+Jogo/Sublime Text 3/Packages/D.sublime-package
+Jogo/Sublime Text 3/Packages/Default.sublime-package
+Jogo/Sublime Text 3/Packages/Diff.sublime-package
+Jogo/Sublime Text 3/Packages/Erlang.sublime-package
+Jogo/Sublime Text 3/Packages/Go.sublime-package
+Jogo/Sublime Text 3/Packages/Graphviz.sublime-package
+Jogo/Sublime Text 3/Packages/Groovy.sublime-package
+Jogo/Sublime Text 3/Packages/Haskell.sublime-package
+Jogo/Sublime Text 3/Packages/HTML.sublime-package
+Jogo/Sublime Text 3/Packages/Java.sublime-package
+Jogo/Sublime Text 3/Packages/JavaScript.sublime-package
+Jogo/Sublime Text 3/Packages/Language - English.sublime-package
+Jogo/Sublime Text 3/Packages/LaTeX.sublime-package
+Jogo/Sublime Text 3/Packages/Lisp.sublime-package
+Jogo/Sublime Text 3/Packages/Lua.sublime-package
+Jogo/Sublime Text 3/Packages/Makefile.sublime-package
+Jogo/Sublime Text 3/Packages/Markdown.sublime-package
+Jogo/Sublime Text 3/Packages/Matlab.sublime-package
+Jogo/Sublime Text 3/Packages/Objective-C.sublime-package
+Jogo/Sublime Text 3/Packages/OCaml.sublime-package
+Jogo/Sublime Text 3/Packages/Pascal.sublime-package
+Jogo/Sublime Text 3/Packages/Perl.sublime-package
+Jogo/Sublime Text 3/Packages/PHP.sublime-package
+Jogo/Sublime Text 3/Packages/Python.sublime-package
+Jogo/Sublime Text 3/Packages/R.sublime-package
+Jogo/Sublime Text 3/Packages/Rails.sublime-package
+Jogo/Sublime Text 3/Packages/Regular Expressions.sublime-package
+Jogo/Sublime Text 3/Packages/RestructuredText.sublime-package
+Jogo/Sublime Text 3/Packages/Ruby.sublime-package
+Jogo/Sublime Text 3/Packages/Scala.sublime-package
+Jogo/Sublime Text 3/Packages/ShellScript.sublime-package
+Jogo/Sublime Text 3/Packages/SQL.sublime-package
+Jogo/Sublime Text 3/Packages/TCL.sublime-package
+Jogo/Sublime Text 3/Packages/Text.sublime-package
+Jogo/Sublime Text 3/Packages/Textile.sublime-package
+Jogo/Sublime Text 3/Packages/Theme - Default.sublime-package
+Jogo/Sublime Text 3/Packages/Vintage.sublime-package
+Jogo/Sublime Text 3/Packages/XML.sublime-package
+Jogo/Sublime Text 3/Packages/YAML.sublime-package
+Jogo/Sublime Text 3/plugin_host.exe
+Jogo/Sublime Text 3/pyexpat.pyd
+Jogo/Sublime Text 3/python3.3.zip
+Jogo/Sublime Text 3/python33.dll
+Jogo/Sublime Text 3/select.pyd
+Jogo/Sublime Text 3/subl.exe
+Jogo/Sublime Text 3/sublime.py
+Jogo/Sublime Text 3/sublime_plugin.py
+Jogo/Sublime Text 3/sublime_text.exe
+Jogo/Sublime Text 3/unicodedata.pyd
+Jogo/Sublime Text 3/update_installer.exe
+Jogo/Sublime Text 3/winsound.pyd
+Jogo/Versao_05_2013/32_bits/atk-1.0.def
+Jogo/Versao_05_2013/32_bits/atk-1.0.lib
+Jogo/Versao_05_2013/32_bits/cairo.def
+Jogo/Versao_05_2013/32_bits/cairo.lib
+Jogo/Versao_05_2013/32_bits/charmap.mif
+Jogo/Versao_05_2013/32_bits/envsubst.exe
+Jogo/Versao_05_2013/32_bits/expat.lib
+Jogo/Versao_05_2013/32_bits/fc-cache.exe
+Jogo/Versao_05_2013/32_bits/fc-cat.exe
+Jogo/Versao_05_2013/32_bits/fc-list.exe
+Jogo/Versao_05_2013/32_bits/fontconfig.def
+Jogo/Versao_05_2013/32_bits/fontconfig.lib
+Jogo/Versao_05_2013/32_bits/freetype-config
+Jogo/Versao_05_2013/32_bits/freetype.def
+Jogo/Versao_05_2013/32_bits/freetype.lib
+Jogo/Versao_05_2013/32_bits/freetype6.dll
+Jogo/Versao_05_2013/32_bits/gailutil.lib
+Jogo/Versao_05_2013/32_bits/gdbus.exe
+Jogo/Versao_05_2013/32_bits/gdk-pixbuf-2.0/2.10.0/loaders.cache
+Jogo/Versao_05_2013/32_bits/gdk-pixbuf-csource.exe
+Jogo/Versao_05_2013/32_bits/gdk-pixbuf-query-loaders.exe
+Jogo/Versao_05_2013/32_bits/gdk-win32-2.0.lib
+Jogo/Versao_05_2013/32_bits/gdk_pixbuf-2.0.lib
+Jogo/Versao_05_2013/32_bits/gettext.exe
+Jogo/Versao_05_2013/32_bits/gettext.sh
+Jogo/Versao_05_2013/32_bits/gio-2.0.def
+Jogo/Versao_05_2013/32_bits/gio-2.0.lib
+Jogo/Versao_05_2013/32_bits/gio-querymodules.exe
+Jogo/Versao_05_2013/32_bits/glib-2.0.def
+Jogo/Versao_05_2013/32_bits/glib-2.0.lib
+Jogo/Versao_05_2013/32_bits/glib-2.0/include/glibconfig.h
+Jogo/Versao_05_2013/32_bits/glib-compile-schemas.exe
+Jogo/Versao_05_2013/32_bits/glib-genmarshal.exe
+Jogo/Versao_05_2013/32_bits/glib-gettextize
+Jogo/Versao_05_2013/32_bits/glib-mkenums
+Jogo/Versao_05_2013/32_bits/gmodule-2.0.def
+Jogo/Versao_05_2013/32_bits/gmodule-2.0.lib
+Jogo/Versao_05_2013/32_bits/GNU.Gettext.dll
+Jogo/Versao_05_2013/32_bits/gobject-2.0.def
+Jogo/Versao_05_2013/32_bits/gobject-2.0.lib
+Jogo/Versao_05_2013/32_bits/gobject-query.exe
+Jogo/Versao_05_2013/32_bits/gspawn-win32-helper-console.exe
+Jogo/Versao_05_2013/32_bits/gspawn-win32-helper.exe
+Jogo/Versao_05_2013/32_bits/gthread-2.0.def
+Jogo/Versao_05_2013/32_bits/gthread-2.0.lib
+Jogo/Versao_05_2013/32_bits/gtk-2.0/2.10.0/engines/libpixmap.dll
+Jogo/Versao_05_2013/32_bits/gtk-2.0/2.10.0/engines/libwimp.dll
+Jogo/Versao_05_2013/32_bits/gtk-2.0/include/gdkconfig.h
+Jogo/Versao_05_2013/32_bits/gtk-2.0/modules/libgail.dll
+Jogo/Versao_05_2013/32_bits/gtk-builder-convert
+Jogo/Versao_05_2013/32_bits/gtk-demo.exe
+Jogo/Versao_05_2013/32_bits/gtk-query-immodules-2.0.exe
+Jogo/Versao_05_2013/32_bits/gtk-update-icon-cache.exe
+Jogo/Versao_05_2013/32_bits/gtk-update-icon-cache.exe.manifest
+Jogo/Versao_05_2013/32_bits/gtk-win32-2.0.lib
+Jogo/Versao_05_2013/32_bits/intl.dll
+Jogo/Versao_05_2013/32_bits/intl.lib
+Jogo/Versao_05_2013/32_bits/libasprintf-0.dll
+Jogo/Versao_05_2013/32_bits/libasprintf.dll.a
+Jogo/Versao_05_2013/32_bits/libatk-1.0-0.dll
+Jogo/Versao_05_2013/32_bits/libatk-1.0.dll.a
+Jogo/Versao_05_2013/32_bits/libcairo-2.dll
+Jogo/Versao_05_2013/32_bits/libcairo-gobject-2.dll
+Jogo/Versao_05_2013/32_bits/libcairo-gobject.dll.a
+Jogo/Versao_05_2013/32_bits/libcairo-script-interpreter-2.dll
+Jogo/Versao_05_2013/32_bits/libcairo-script-interpreter.dll.a
+Jogo/Versao_05_2013/32_bits/libcairo.dll.a
+Jogo/Versao_05_2013/32_bits/libexpat-1.dll
+Jogo/Versao_05_2013/32_bits/libexpat.def
+Jogo/Versao_05_2013/32_bits/libexpat.dll.a
+Jogo/Versao_05_2013/32_bits/libfontconfig-1.dll
+Jogo/Versao_05_2013/32_bits/libfontconfig.dll.a
+Jogo/Versao_05_2013/32_bits/libfreetype.dll.a
+Jogo/Versao_05_2013/32_bits/libgailutil-18.dll
+Jogo/Versao_05_2013/32_bits/libgailutil.dll.a
+Jogo/Versao_05_2013/32_bits/libgcc_s_dw2-1.dll
+Jogo/Versao_05_2013/32_bits/libgdk-win32-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libgdk-win32-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libgdk_pixbuf-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libgdk_pixbuf-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libgio-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libgio-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libglib-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libglib-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libgmodule-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libgmodule-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libgobject-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libgobject-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libgthread-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libgthread-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libgtk-win32-2.0-0.dll
+Jogo/Versao_05_2013/32_bits/libgtk-win32-2.0.dll.a
+Jogo/Versao_05_2013/32_bits/libintl.def
+Jogo/Versao_05_2013/32_bits/libintl.dll.a
+Jogo/Versao_05_2013/32_bits/libpango-1.0-0.dll
+Jogo/Versao_05_2013/32_bits/libpango-1.0.dll.a
+Jogo/Versao_05_2013/32_bits/libpangocairo-1.0-0.dll
+Jogo/Versao_05_2013/32_bits/libpangocairo-1.0.dll.a
+Jogo/Versao_05_2013/32_bits/libpangoft2-1.0-0.dll
+Jogo/Versao_05_2013/32_bits/libpangoft2-1.0.dll.a
+Jogo/Versao_05_2013/32_bits/libpangowin32-1.0-0.dll
+Jogo/Versao_05_2013/32_bits/libpangowin32-1.0.dll.a
+Jogo/Versao_05_2013/32_bits/libpixman-1.a
+Jogo/Versao_05_2013/32_bits/libpng.def
+Jogo/Versao_05_2013/32_bits/libpng.lib
+Jogo/Versao_05_2013/32_bits/libpng14-14.dll
+Jogo/Versao_05_2013/32_bits/libpng14.dll.a
+Jogo/Versao_05_2013/32_bits/libz.dll.a
+Jogo/Versao_05_2013/32_bits/Montador.exe
+Jogo/Versao_05_2013/32_bits/ngettext.exe
+Jogo/Versao_05_2013/32_bits/pango-1.0.def
+Jogo/Versao_05_2013/32_bits/pango-1.0.lib
+Jogo/Versao_05_2013/32_bits/pango-querymodules.exe
+Jogo/Versao_05_2013/32_bits/pango-view.exe
+Jogo/Versao_05_2013/32_bits/pangocairo-1.0.def
+Jogo/Versao_05_2013/32_bits/pangocairo-1.0.lib
+Jogo/Versao_05_2013/32_bits/pangoft2-1.0.def
+Jogo/Versao_05_2013/32_bits/pangoft2-1.0.lib
+Jogo/Versao_05_2013/32_bits/pangowin32-1.0.def
+Jogo/Versao_05_2013/32_bits/pangowin32-1.0.lib
+Jogo/Versao_05_2013/32_bits/pkg-config.exe
+Jogo/Versao_05_2013/32_bits/pkgconfig/atk.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-fc.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-ft.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-gobject.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-pdf.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-png.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-ps.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-svg.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-win32-font.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo-win32.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/cairo.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/fontconfig.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/freetype2.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gail.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gdk-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gdk-pixbuf-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gdk-win32-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gio-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gio-windows-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/glib-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gmodule-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gmodule-no-export-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gobject-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gthread-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gtk+-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/gtk+-win32-2.0.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/libpng.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/libpng14.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/pango.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/pangocairo.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/pangoft2.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/pangowin32.pc
+Jogo/Versao_05_2013/32_bits/pkgconfig/pixman-1.pc
+Jogo/Versao_05_2013/32_bits/simulador.exe
+Jogo/Versao_05_2013/32_bits/simulador_Atual.exe
+Jogo/Versao_05_2013/32_bits/simulador_Atual_Funciona.exe
+Jogo/Versao_05_2013/32_bits/simulador_FuncionandoAntigo.exe
+Jogo/Versao_05_2013/32_bits/xmlwf.exe
+Jogo/Versao_05_2013/32_bits/zdll.lib
+Jogo/Versao_05_2013/32_bits/zlib.def
+Jogo/Versao_05_2013/32_bits/zlib1.dll
+Jogo/Versao_05_2013/Exemplos/charmap.mif
+Jogo/Versao_05_2013/Exemplos/fatorial.asm
+Jogo/Versao_05_2013/Exemplos/Hello.asm
+Jogo/Versao_05_2013/Exemplos/Hello.mif
+Jogo/Versao_05_2013/Exemplos/Hello2.asm
+Jogo/Versao_05_2013/Exemplos/Hello2.mif
+Jogo/Versao_05_2013/Exemplos/Hello3.asm
+Jogo/Versao_05_2013/Exemplos/Hello3.mif
+Jogo/Versao_05_2013/Exemplos/Hello4.asm
+Jogo/Versao_05_2013/Exemplos/Hello4.mif
+Jogo/Versao_05_2013/Exemplos/pacman.asm
+Jogo/Versao_05_2013/Exemplos/pacman.mif
+Jogo/Versao_05_2013/Exemplos/printaASCII.asm
+Jogo/Versao_05_2013/Exemplos/printaASCII.mif
+Jogo/Versao_05_2013/Exemplos/printCharmap.asm
+Jogo/Versao_05_2013/Exemplos/printCharmap.mif
+Jogo/Versao_05_2013/Exemplos/printnr.asm
+Jogo/Versao_05_2013/Manual/compilador_doc/leia-me.txt
+Jogo/Versao_05_2013/Manual/compilador_doc/sintaxe_linguagem.txt
+Jogo/Versao_05_2013/Manual/Dicas_de_como_fazer_tudo.txt
+Jogo/Versao_05_2013/Manual/Leia-me_Montador.txt
+Jogo/Versao_05_2013/Manual/ManualSimulador.pdf
+Jogo/Versao_05_2013/Manual/reference_guide_icmc_processor_v_1_0_r_2.pdf
+Jogo/Versao_05_2013/simulador_fonte/compila.sh
+Jogo/Versao_05_2013/simulador_fonte/Controller.cpp
+Jogo/Versao_05_2013/simulador_fonte/Controller.h
+Jogo/Versao_05_2013/simulador_fonte/Controller.o
+Jogo/Versao_05_2013/simulador_fonte/ControllerInterface.h
+Jogo/Versao_05_2013/simulador_fonte/Instrucoes.h
+Jogo/Versao_05_2013/simulador_fonte/main.cpp
+Jogo/Versao_05_2013/simulador_fonte/main.o
+Jogo/Versao_05_2013/simulador_fonte/Makefile.win
+Jogo/Versao_05_2013/simulador_fonte/Mneumonicos.h
+Jogo/Versao_05_2013/simulador_fonte/Model.cpp
+Jogo/Versao_05_2013/simulador_fonte/Model.h
+Jogo/Versao_05_2013/simulador_fonte/Model.o
+Jogo/Versao_05_2013/simulador_fonte/ModelInterface.h
+Jogo/Versao_05_2013/simulador_fonte/Registradores.h
+Jogo/Versao_05_2013/simulador_fonte/simulador.dev
+Jogo/Versao_05_2013/simulador_fonte/simulador.exe
+Jogo/Versao_05_2013/simulador_fonte/simulador.layout
+Jogo/Versao_05_2013/simulador_fonte/Video.h
+Jogo/Versao_05_2013/simulador_fonte/View.cpp
+Jogo/Versao_05_2013/simulador_fonte/View.h
+Jogo/Versao_05_2013/simulador_fonte/View.o
