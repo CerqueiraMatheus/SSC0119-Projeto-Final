@@ -38,9 +38,9 @@ inicio:
 loop:
 	atualiza_registradores(&cpu, valor_memoria);
 
-	int rx = pega_pedaco(cpu.ir.valor, 9, 7);
-	int ry = pega_pedaco(cpu.ir.valor, 6, 4);
-	int rz = pega_pedaco(cpu.ir.valor, 3, 1);
+	unsigned int rx = pega_pedaco(cpu.ir.valor, 9, 7);
+	unsigned int ry = pega_pedaco(cpu.ir.valor, 6, 4);
+	unsigned int rz = pega_pedaco(cpu.ir.valor, 3, 1);
 
 	if (rw == ESCRITA) {
 		memoria[cpu.mux[M1].valor] = cpu.mux[M5].valor;
