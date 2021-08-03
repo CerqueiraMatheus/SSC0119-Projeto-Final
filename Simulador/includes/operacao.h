@@ -34,6 +34,7 @@ typedef enum Operacao {
     DIV  = 35, // 100011
     INC  = 36, // 100100
     MOD  = 37, // 100101
+    ADDN = 38, // 100110
 
     // Manipulação de Dados
     LOAD   = 48, // 110000
