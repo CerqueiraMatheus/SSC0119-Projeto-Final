@@ -29,7 +29,7 @@ cpu_t cria_cpu() {
     cpu.mux[M5].selecao = MUX_3;
     cpu.mux[M6].selecao = FR;
 
-    cpu.estado = RESETA;
+    cpu.estado = BUSCA;
 
     return cpu;
 }
