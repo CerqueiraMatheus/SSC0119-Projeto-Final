@@ -2,20 +2,16 @@
 jmp main
 
 
-jogador : var #1
-
-tabuleiro : var #9
-
-posicao_valida : var #1
+digito : var #1
 posicao : var #1
-
 caractere : var #1
 digito_valido : var #1
-digito : var #1
-
-vencedor : var #1
+posicao_valida : var #1
 
 rodada : var #1
+jogador : var #1
+vencedor : var #1
+tabuleiro : var #9
 
 
 main:
@@ -45,6 +41,119 @@ main__fim:
 	halt
 
 
+; Caractere
+
+le_caractere:
+	push fr
+	push r0
+	push r1
+	
+	loadn r1, #255					; VAZIO := 255
+									;
+le_caractere__loop:					; repita:
+	inchar r0						;     caractere := entrada()
+	cmp r0, r1						;
+	jeq le_caractere__loop			; enquanto caractere = VAZIO
+									;
+	store caractere, r0				;
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+; Digito
+
+checa_digito:
+	push fr
+	push r0
+	push r1
+	push r2
+	
+	loadn r0, #0					; 
+	load r1, caractere				;
+									;
+	loadn r2, #'1'					;
+	cmp r1, r2						; se caractere < '1':
+	jle checa_digito__fim			;     dígito_válido := falso
+									;
+	loadn r2, #'9'					; senão se caractere > '9':
+	cmp r1, r2						;     dígito_válido := falso
+	jgr checa_digito__fim			;
+									; senão:
+	loadn r0, #1					;     dígito_válido := verdadeiro
+									;
+checa_digito__fim:					;
+	store digito_valido, r0			;
+	
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+caractere_para_digito:
+	push fr
+	push r0
+	push r1
+	
+	load r0, caractere				;
+	loadn r1, #'0'					;
+	sub r0, r0, r1					;
+	store digito, r0				; dígito := caractere - '0'
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+; Posição
+
+checa_posicao:
+	push fr
+	push r0
+	push r1
+	push r2
+	
+	loadn r0, #0					;
+									;
+	loadn r1, #tabuleiro			;
+	load r2, posicao				;
+	add r1, r1, r2					;
+	loadi r1, r1					; casa := tabuleiro[posição]
+									;
+	loadn r2, #' '					; VAZIO = ' '
+	cmp r1, r2						; se casa != VAZIO:
+	jne checa_posicao__fim			;     posição_válida := falso
+									; senão:
+	loadn r0, #1					;     posição_válida := verdadeiro
+	
+checa_posicao__fim:
+	store posicao_valida, r0
+	
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+digito_para_posicao:
+	push fr
+	push r0
+	
+	load r0, digito					;
+	dec r0							;
+	store posicao, r0				; posição := dígito - 1
+	
+	pop r0
+	pop fr
+	rts
+
+
 ; Rodada
 
 cria_rodada:
@@ -72,7 +181,85 @@ proxima_rodada:
 	rts
 
 
-; Jogo
+; Jogador
+
+cria_jogador:
+	push fr
+	push r0
+	
+	loadn r0, #'X'					;
+	store jogador, r0				; jogador := 'X'
+	
+	pop r0
+	pop fr
+	rts
+
+
+troca_jogador:
+	push fr
+	push r0
+	push r1
+	
+	load r0, jogador				;
+	loadn r1, #'X'					; novo := 'X'
+	cmp r0, r1						;
+	jne troca_jogador__fim			; se jogador = novo:
+	loadn r1, #'O'					;     novo := 'O'
+									;
+troca_jogador__fim:					;
+	store jogador, r1				; jogador := novo
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+; Tabuleiro
+
+cria_tabuleiro:
+	push fr
+	push r0
+	push r1
+	push r2
+	
+	loadn r0, #' '					;
+	loadn r1, #tabuleiro			; casa := &tabuleiro
+	loadn r2, #9					;
+	add r2, r2, r1					; última := casa + 9
+									;
+cria_tabuleiro__loop:				; repita:
+	storei r1, r0					;     *casa := VAZIO
+	inc r1							;     casa++
+	cmp r1, r2						;
+	jle cria_tabuleiro__loop		; enquanto casa < última
+	
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+preenche_tabuleiro:
+	push fr
+	push r0
+	push r1
+	
+	loadn r0, #tabuleiro			;
+	load r1, posicao				;
+	add r0, r0, r1					; casa := &tabuleiro[posição]
+									;
+	load r1, jogador				;
+	storei r0, r1					; *casa = jogador
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+; Jogada
 
 executa_jogada:
 	push fr
@@ -84,20 +271,20 @@ executa_jogada:
 executa_jogada__loop:				; repita:
 	call le_caractere				;     caractere := le_caractere()
 									;
-	call checa_digito				;     digito_valido := checa_digito(caracter)
+	call checa_digito				;     dígito_válido := checa_dígito(caracter)
 	load r1, digito_valido			;
 	cmp r0, r1						;
-	jne executa_jogada__loop		;     se digito_valido = falso:
+	jne executa_jogada__loop		;     se dígito_válido = falso:
 									;         continue
-	call caractere_para_digito		;     digito := caracter_para_digito(caracter)
-	call digito_para_posicao		;     posicao := digito_para_posicao(digito)
+	call caractere_para_digito		;     dígito := caracter_para_dígito(caracter)
+	call digito_para_posicao		;     posição := dígito_para_posção(dígito)
 									;
-	call checa_posicao				;     posicao_valida := checa_posicao(tabuleiro, posicao)
+	call checa_posicao				;     posição_válida := checa_posição(tabuleiro, posição)
 	load r1, posicao_valida			;
 	cmp r0, r1						;
-	jne executa_jogada__loop		;     se posicao_valida = verdadeiro:
+	jne executa_jogada__loop		;     se posição_válida = verdadeiro:
 									;         saia
-	call preenche_tabuleiro			; preenche_tabuleiro(tabuleiro, posicao, jogador)
+	call preenche_tabuleiro			; preenche_tabuleiro(tabuleiro, posição, jogador)
 	
 	pop r1
 	pop r0
@@ -105,41 +292,7 @@ executa_jogada__loop:				; repita:
 	rts
 
 
-checa_vencedor:
-	push fr
-	push r0
-	push r1
-	
-	loadn r0, #' '
-	
-	call checa_linhas
-	load r1, vencedor
-	cmp r0, r1
-	jne checa_vencedor__fim
-	
-	call checa_colunas
-	load r1, vencedor
-	cmp r0, r1
-	jne checa_vencedor__fim
-	
-	call checa_diagonal_1
-	load r1, vencedor
-	cmp r0, r1
-	jne checa_vencedor__fim
-	
-	call checa_diagonal_2
-	load r1, vencedor
-	cmp r0, r1
-	jne checa_vencedor__fim
-	
-	call checa_rodada
-
-checa_vencedor__fim:
-	pop r1
-	pop r0
-	pop fr
-	rts
-
+; Vencedor
 
 checa_linhas:
 	push fr
@@ -217,7 +370,7 @@ checa_colunas__loop:				; repita:
 	loadn r4, #tabuleiro			;
 	add r4, r4, r3					;
 									;
-	loadi r5, r4					;     primeira := tabuleira[i]
+	loadi r5, r4					;     primeira := tabuleiro[i]
 	cmp r1, r5						;     se primeira = VAZIO:
 	jeq checa_colunas__inc			;         continue
 									;
@@ -342,8 +495,8 @@ checa_rodada:
 	loadn r1, #9					;
 									;
 	load r2, rodada					;
-	cmp r1, r2						; se rodada = 9:
-	jne checa_rodada__fim			;
+	cmp r1, r2						;
+	jne checa_rodada__fim			; se rodada = 9:
 									;
 	loadn r0, #'-'					;     vencedor := EMPATE
 									;
@@ -357,191 +510,36 @@ checa_rodada__fim:					;
 	rts
 
 
-; Jogador
-
-cria_jogador:
-	push fr
-	push r0
-	
-	loadn r0, #'X'					;
-	store jogador, r0				; jogador := 'X'
-	
-	pop r0
-	pop fr
-	rts
-
-
-troca_jogador:
+checa_vencedor:
 	push fr
 	push r0
 	push r1
 	
-	load r0, jogador				;
-	loadn r1, #'X'					; novo := 'X'
+	loadn r0, #' '					; NENHUM := ' '
+									;
+	call checa_linhas				; vencedor := checa_linhas(tabuleiro)
+	load r1, vencedor				;
 	cmp r0, r1						;
-	jne troca_jogador__fim			; se jogador = novo:
-	loadn r1, #'O'					;     novo := 'O'
+	jne checa_vencedor__fim			; se vencedor != NENHUM:
 									;
-troca_jogador__fim:					;
-	store jogador, r1				; jogador := novo
-	
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-; Tabuleiro
-
-cria_tabuleiro:
-	push fr
-	push r0
-	push r1
-	push r2
-	
-	loadn r0, #' '					;
-	loadn r1, #tabuleiro			; casa := &tabuleiro
-	loadn r2, #9					;
-	add r2, r2, r1					; última := casa + 9
-									;
-cria_tabuleiro__loop:				; repita:
-	storei r1, r0					;     *casa := ' '
-	inc r1							;     casa++
-	cmp r1, r2						;
-	jle cria_tabuleiro__loop		; enquanto casa < última
-	
-	pop r2
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-preenche_tabuleiro:
-	push fr
-	push r0
-	push r1
-	
-	loadn r0, #tabuleiro			;
-	load r1, posicao				;
-	add r0, r0, r1					; casa := &tabuleiro[posição]
-									;
-	load r1, jogador				;
-	storei r0, r1					; *casa = jogador
-	
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-; Posição
-
-digito_para_posicao:
-	push fr
-	push r0
-	
-	load r0, digito					;
-	dec r0							;
-	store posicao, r0				; posicao := digito - 1
-	
-	pop r0
-	pop fr
-	rts
-
-
-checa_posicao:
-	push fr
-	push r0
-	push r1
-	push r2
-	
-	loadn r0, #0					;
-									;
-	loadn r1, #tabuleiro			;
-	load r2, posicao				;
-	add r1, r1, r2					;
-	loadi r1, r1					; casa := tabuleiro[posição]
-									;
-	loadn r2, #' '					; VAZIO = ' '
-	cmp r1, r2						; se casa != VAZIO:
-	jne checa_posicao__fim			;     posicao_valida := falso
-									; senão:
-	loadn r0, #1					;     posicao_valida := verdadeiro
-	
-checa_posicao__fim:
-	store posicao_valida, r0
-	
-	pop r2
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-; Caractere
-
-le_caractere:
-	push fr
-	push r0
-	push r1
-	
-	loadn r1, #255					; VAZIO := 255
-									;
-le_caractere__loop:					; repita:
-	inchar r0						;     caractere := entrada()
+	call checa_colunas				;     vencedor := checa_colunas(tabuleiro)
+	load r1, vencedor				;
 	cmp r0, r1						;
-	jeq le_caractere__loop			; enquanto caractere = VAZIO
+	jne checa_vencedor__fim			; se vencedor != NENHUM:
 									;
-	store caractere, r0				;
-	
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-; Digito
-
-checa_digito:
-	push fr
-	push r0
-	push r1
-	push r2
-	
-	loadn r0, #0					; 
-	load r1, caractere				;
+	call checa_diagonal_1			;     vencedor := checa_diagonal_1(tabuleiro)
+	load r1, vencedor				;
+	cmp r0, r1						;
+	jne checa_vencedor__fim			; se vencedor != NENHUM:
 									;
-	loadn r2, #'1'					;
-	cmp r1, r2						; se caractere < '1':
-	jle checa_digito__fim			;     digito_valido := falso
+	call checa_diagonal_2			;     vencedor := checa_diagonal_2(tabuleiro)
+	load r1, vencedor				;
+	cmp r0, r1						;
+	jne checa_vencedor__fim			; se vencedor != NENHUM:
 									;
-	loadn r2, #'9'					; senão se caractere > '9':
-	cmp r1, r2						;     digito_valido := falso
-	jgr checa_digito__fim			;
-									; senão:
-	loadn r0, #1					;     digito_valido := verdadeiro
-									;
-checa_digito__fim:					;
-	store digito_valido, r0			;
+	call checa_rodada				;     vencedor := checa_rodada(tabuleiro)
 	
-	pop r2
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-caractere_para_digito:
-	push fr
-	push r0
-	push r1
-	
-	load r0, caractere				;
-	loadn r1, #'0'					;
-	sub r0, r0, r1					;
-	store digito, r0				; digito := caractere - '0'
-	
+checa_vencedor__fim:
 	pop r1
 	pop r0
 	pop fr
