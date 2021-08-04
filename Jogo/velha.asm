@@ -3,6 +3,7 @@
 
 main:
 	call cria_rodada
+	call cria_pontos
 	call cria_jogador
 	call cria_tabuleiro
 	
@@ -21,8 +22,22 @@ main__loop:
 	jmp main__loop
 
 main__fim:
+	call atualiza_pontos
+
 	load r0, vencedor
 	loadn r1, #0
+	outchar r0, r1
+	
+	load r0, pontos_x
+	loadn r1, #'0'
+	add r0, r0, r1
+	loadn r1, #1
+	outchar r0, r1
+	
+	load r0, pontos_o
+	loadn r1, #'0'
+	add r0, r0, r1
+	loadn r1, #2
 	outchar r0, r1
 
 	halt
@@ -141,33 +156,6 @@ digito_para_posicao:
 	rts
 
 
-; Rodada
-
-cria_rodada:
-	push fr
-	push r0
-	
-	loadn r0, #1					;
-	store rodada, r0				; rodada := 1
-	
-	pop r0
-	pop fr
-	rts
-
-
-proxima_rodada:
-	push fr
-	push r0
-	
-	load r0, rodada					;
-	inc r0							;
-	store rodada, r0				; rodada++
-	
-	pop r0
-	pop fr
-	rts
-
-
 ; Jogador
 
 cria_jogador:
@@ -242,6 +230,85 @@ preenche_tabuleiro:
 	load r1, jogador				;
 	storei r0, r1					; *casa = jogador
 	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+; Rodada
+
+cria_rodada:
+	push fr
+	push r0
+	
+	loadn r0, #1					;
+	store rodada, r0				; rodada := 1
+	
+	pop r0
+	pop fr
+	rts
+
+
+proxima_rodada:
+	push fr
+	push r0
+	
+	load r0, rodada					;
+	inc r0							;
+	store rodada, r0				; rodada++
+	
+	pop r0
+	pop fr
+	rts
+
+
+; Pontos
+
+cria_pontos:
+	push fr
+	push r0
+	
+	loadn r0, #0					;
+	store pontos_x, r0				; pontos_x := 0
+	store pontos_o, r0				; pontos_o := 0
+	
+	pop r0
+	pop fr
+	rts
+
+
+atualiza_pontos:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+
+	load r0, pontos_x				;
+	load r1, pontos_o				;
+	load r2, vencedor				;
+									;
+	load r3, X						;
+	cmp r2, r3						;
+	jne atualiza_pontos__o			; se vencedor = X:
+									;
+	inc r0							;     pontos_x++
+	jmp atualiza_pontos__fim		;
+									;
+atualiza_pontos__o:					;
+	load r3, O						;
+	cmp r2, r3						;
+	jne atualiza_pontos__fim		; senão se vencedor = O
+									;
+	inc r1							;
+									;     pontos_o++
+atualiza_pontos__fim:				;
+	store pontos_x, r0				;
+	store pontos_o, r1				;
+
+	pop r3
+	pop r2
 	pop r1
 	pop r0
 	pop fr
@@ -539,6 +606,8 @@ checa_vencedor__fim:
 rodada : var #1
 jogador : var #1
 vencedor : var #1
+pontos_x : var #1
+pontos_o : var #1
 tabuleiro : var #9
 
 digito : var #1
