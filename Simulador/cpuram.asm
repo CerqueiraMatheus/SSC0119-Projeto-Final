@@ -105,6 +105,12 @@
 	loadn r0, #24
 	outchar r3, r0		; Printa M na linha 24
 	
+	; Teste do addn com caractere
+	loadn r0, #0
+	loadn r1, #0		
+	addn r1, r1, #'Z'
+	outchar r1, r0	
+
 	; Teste do CMP e JMP
 	loadn r0, #26
 	loadn r1, #5
@@ -128,26 +134,6 @@ SaiJMP:
 	loadn r3, #'O'
 	loadn r4, #'X'
 	cmp r1, r2
-	cgr CallMaior
-	cel CallMenorIgual
-	jmp CallSai
-CallMaior:
-	outchar r3, r0		; Printa P na linha 28
-	rts
-CallMenorIgual:
-	outchar r4, r0		; Printa Q na linha 28
-	rts
-
-CallSai:	
-
-	; Teste do PUSH e POP
-	loadn r0, #30
-	loadn r1, #'P'
-	push r1
-	pop r2
-	outchar r2, r0		; Printa R na linha 30
-	
-	
 	
 Fim:	
 	halt
