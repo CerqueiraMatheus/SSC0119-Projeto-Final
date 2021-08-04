@@ -19,13 +19,21 @@ vencedor : var #1
 main:
 	call cria_jogador
 	call cria_tabuleiro
+	
+	loadn r0, #' '
 
-	call executa_jogada
-	call executa_jogada
+main__loop:
 	call executa_jogada
 	
 	call checa_vencedor
+	load r1, vencedor
+	cmp r0, r1
+	jne main__fim
 	
+	call troca_jogador
+	jmp main__loop
+
+main__fim:
 	load r0, vencedor
 	loadn r1, #0
 	outchar r0, r1
@@ -82,6 +90,16 @@ checa_vencedor:
 	load r1, vencedor
 	cmp r0, r1
 	jne checa_vencedor__fim
+	
+	call checa_diagonal_1
+	load r1, vencedor
+	cmp r0, r1
+	jne checa_vencedor__fim
+	
+	call checa_diagonal_2
+	load r1, vencedor
+	cmp r0, r1
+	jne checa_vencedor__fim
 
 checa_vencedor__fim:
 	pop r1
@@ -101,8 +119,8 @@ checa_linhas:
 	push r6
 	push r7
 	
-	loadn r0, #' '					; vencedor := ' '
-	loadn r1, #' '					;
+	loadn r0, #' '					; vencedor := NENHUM
+	loadn r1, #' '					; VAZIO = ' '
 	loadn r2, #3					;
 	loadn r3, #9					;
 	loadn r4, #0					; i := 0
@@ -113,7 +131,7 @@ checa_linhas__loop:					; repita:
 	add r5, r5, r4					;
 									;
 	loadi r6, r5					;     primeira := tabuleiro[i + 0]
-	cmp r1, r6						;     se primeira = ' ':
+	cmp r1, r6						;     se primeira = VAZIO:
 	jeq checa_linhas__inc			;         continue
 									;
 	inc r5							;
@@ -157,8 +175,8 @@ checa_colunas:
 	push r5
 	push r6
 	
-	loadn r0, #' '					; vencedor := ' '
-	loadn r1, #' '					;
+	loadn r0, #' '					; vencedor := NENHUM
+	loadn r1, #' '					; VAZIO := ' '
 	loadn r2, #3					;
 	loadn r3, #0					; i = 0
 									;
@@ -167,7 +185,7 @@ checa_colunas__loop:				; repita:
 	add r4, r4, r3					;
 									;
 	loadi r5, r4					;     primeira := tabuleira[i + 0]
-	cmp r1, r5						;     se primeira = ' ':
+	cmp r1, r5						;     se primeira = VAZIO:
 	jeq checa_colunas__inc			;         continue
 									;
 	add r4, r4, r2					;
@@ -191,6 +209,87 @@ checa_colunas__inc:					;
 	
 	pop r6
 	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+checa_diagonal_1:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	push r4
+	
+	loadn r0, #' '					; vencedor := NENHUM
+	loadn r1, #4					;
+	loadn r2, #tabuleiro			;
+									;
+	loadi r3, r2					; primeira := tabuleiro[0]
+	cmp r0, r3						; se primeira = VAZIO:
+	jeq checa_diagonal_1__fim		;     saia
+									;
+	add r2, r2, r1					;
+	loadi r4, r2					; segunda := tabuleiro[4]
+	cmp r3, r4						; se primeira != segunda:
+	jne checa_diagonal_1__fim		;     saia
+									;
+	add r2, r2, r1					;
+	loadi r4, r2					; terceira := tabuleiro[8]
+	cmp r3, r4						; se primeira != terceira:
+	jne checa_diagonal_1__fim		;     saia
+									;
+	mov r0, r3 						; vencedor := primeira
+									;
+checa_diagonal_1__fim:				;
+	store vencedor, r0				;
+	
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+checa_diagonal_2:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	push r4
+	
+	loadn r0, #' '					; vencedor := NENHUM
+	loadn r1, #2					;
+	loadn r2, #tabuleiro			;
+									;
+	add r2, r2, r1					;
+	loadi r3, r2					; primeira := tabuleiro[2]
+	cmp r0, r3						; se primeira = VAZIO:
+	jeq checa_diagonal_2__fim		;     saia
+									;
+	add r2, r2, r1					;
+	loadi r4, r2					; segunda := tabuleiro[4]
+	cmp r3, r4						; se primeira != segunda:
+	jne checa_diagonal_2__fim		;     saia
+									;
+	add r2, r2, r1					;
+	loadi r4, r2					; terceira := tabuleiro[6]
+	cmp r3, r4						; se primeira != terceira:
+	jne checa_diagonal_2__fim		;     saia
+									;
+	mov r0, r3 						; vencedor := primeira
+									;
+checa_diagonal_2__fim:				;
+	store vencedor, r0				;
+	
 	pop r4
 	pop r3
 	pop r2
@@ -268,7 +367,7 @@ preenche_tabuleiro:
 	loadn r0, #tabuleiro			;
 	load r1, posicao				;
 	add r0, r0, r1					; casa := &tabuleiro[posição]
-	
+									;
 	load r1, jogador				;
 	storei r0, r1					; *casa = jogador
 	
@@ -306,8 +405,8 @@ checa_posicao:
 	add r1, r1, r2					;
 	loadi r1, r1					; casa := tabuleiro[posição]
 									;
-	loadn r2, #' '					;
-	cmp r1, r2						; se casa != ' ':
+	loadn r2, #' '					; VAZIO = ' '
+	cmp r1, r2						; se casa != VAZIO:
 	jne checa_posicao__fim			;     posicao_valida := falso
 									; senão:
 	loadn r0, #1					;     posicao_valida := verdadeiro
