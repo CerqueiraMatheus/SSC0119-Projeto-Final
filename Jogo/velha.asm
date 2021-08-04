@@ -15,8 +15,11 @@ digito : var #1
 
 vencedor : var #1
 
+rodada : var #1
+
 
 main:
+	call cria_rodada
 	call cria_jogador
 	call cria_tabuleiro
 	
@@ -30,6 +33,7 @@ main__loop:
 	cmp r0, r1
 	jne main__fim
 	
+	call proxima_rodada
 	call troca_jogador
 	jmp main__loop
 
@@ -39,6 +43,33 @@ main__fim:
 	outchar r0, r1
 
 	halt
+
+
+; Rodada
+
+cria_rodada:
+	push fr
+	push r0
+	
+	loadn r0, #1					;
+	store rodada, r0				; rodada := 1
+	
+	pop r0
+	pop fr
+	rts
+
+
+proxima_rodada:
+	push fr
+	push r0
+	
+	load r0, rodada					;
+	inc r0							;
+	store rodada, r0				; rodada++
+	
+	pop r0
+	pop fr
+	rts
 
 
 ; Jogo
@@ -100,6 +131,8 @@ checa_vencedor:
 	load r1, vencedor
 	cmp r0, r1
 	jne checa_vencedor__fim
+	
+	call checa_rodada
 
 checa_vencedor__fim:
 	pop r1
@@ -120,7 +153,7 @@ checa_linhas:
 	push r7
 	
 	loadn r0, #' '					; vencedor := NENHUM
-	loadn r1, #' '					; VAZIO = ' '
+	loadn r1, #' '					; VAZIO := ' '
 	loadn r2, #3					;
 	loadn r3, #9					;
 	loadn r4, #0					; i := 0
@@ -130,7 +163,7 @@ checa_linhas__loop:					; repita:
 	loadn r5, #tabuleiro			;
 	add r5, r5, r4					;
 									;
-	loadi r6, r5					;     primeira := tabuleiro[i + 0]
+	loadi r6, r5					;     primeira := tabuleiro[i]
 	cmp r1, r6						;     se primeira = VAZIO:
 	jeq checa_linhas__inc			;         continue
 									;
@@ -184,7 +217,7 @@ checa_colunas__loop:				; repita:
 	loadn r4, #tabuleiro			;
 	add r4, r4, r3					;
 									;
-	loadi r5, r4					;     primeira := tabuleira[i + 0]
+	loadi r5, r4					;     primeira := tabuleira[i]
 	cmp r1, r5						;     se primeira = VAZIO:
 	jeq checa_colunas__inc			;         continue
 									;
@@ -292,6 +325,31 @@ checa_diagonal_2__fim:				;
 	
 	pop r4
 	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+checa_rodada:
+	push fr
+	push r0
+	push r1
+	push r2
+	
+	loadn r0, #' '					; vencedor := NENHUM
+	loadn r1, #9					;
+									;
+	load r2, rodada					;
+	cmp r1, r2						; se rodada = 9:
+	jne checa_rodada__fim			;
+									;
+	loadn r0, #'-'					;     vencedor := EMPATE
+									;
+checa_rodada__fim:					;
+	store vencedor, r0				;
+
 	pop r2
 	pop r1
 	pop r0
