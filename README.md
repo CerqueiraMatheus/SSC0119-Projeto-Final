@@ -2,7 +2,7 @@
 O jogo implementado em assembly para o processador ICMC foi o jogo da velha. O jogo permite que 2 jogadores se enfrentem, e a cada rodada o jogador vencedor recebe um ponto no placar. Para jogar, o usuário deve digitar um número entre 1 e 9, que representam as casas do  tabuleiro virtual.
 
 # Simulador
-O simulador foi refatorado a partir do [código original](https://github.com/simoesusp/Processador-ICMC/blob/master/Simple_Simulator/simple_simulator_template.c), melhorando a modularização, e o encapsulamento usando técnicas de TAD, a instrução escolhida para ser adicionada à arquitetura foi a adicionar um valor imediato. Para utilizar a instrução, usasse o seguinte comando addn, segue um exemplo de como somar o valor inteiro 2 com o conteúdo do registrador r2, e colocar o resultado em r1: 
+O simulador foi refatorado a partir do [código original](https://github.com/simoesusp/Processador-ICMC/blob/master/Simple_Simulator/simple_simulator_template.c), melhorando a modularização, e o encapsulamento usando técnicas de TAD, a instrução escolhida para ser adicionada à arquitetura foi a de adicionar um valor imediato. Para utilizar a instrução, usasse o comando addn rx, ry #i, segue um exemplo de como somar o valor inteiro 2 com o conteúdo do registrador r2, e colocar o resultado em r1: 
 ```
 addn r1, r2, #2
 ```
