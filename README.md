@@ -10,8 +10,6 @@ A instrução, depois que passa pelo montador, é divida em 2 linhas, a primeira
 
 
 ### Desenvolvedores:
-Gustavo Brunelli - Nº USP 11801053
-Matheus Cerqueira - Nº USP 11911104
-Pedro Castro - Nº USP 11795784
-
-
+* Gustavo Brunelli - Nº USP 11801053
+* Matheus Cerqueira - Nº USP 11911104
+* Pedro Castro - Nº USP 11795784
