@@ -35,6 +35,7 @@ enum Selecao {
 
     // Mux 4
     UM = 8,
+    IMEDIATO = 9,
 
     // Mux 5
     MUX_3 = 1
