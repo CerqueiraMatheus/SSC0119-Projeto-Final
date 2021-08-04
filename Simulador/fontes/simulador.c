@@ -163,6 +163,19 @@ int main() {
                         operacao_ula = operacao;
                         cpu.mux[M2].selecao = ULA;
                         cpu.registradores[rx].load = true;
+                        tem_carry = pega_pedaco(cpu.ir.valor, 0, 0);
+
+                        cpu.estado = BUSCA;
+                        break;
+
+                    case ADDN:
+                        cpu.mux[M4].selecao = IMEDIATO;
+                        cpu.mux[M3].selecao = ry;
+                        cpu.mux[M2].selecao = ULA;
+                        cpu.registradores[rx].load = true;
+                        cpu.pc.incrementa = true;
+                        tem_carry = pega_pedaco(cpu.ir.valor, 0, 0);
+                        operacao_ula = ADD;
 
                         cpu.estado = BUSCA;
                         break;
