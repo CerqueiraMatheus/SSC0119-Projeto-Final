@@ -39,14 +39,14 @@
 	outchar r2, r0
 	
 	; Teste do Add
-	loadn r1, #'F'
+	loadn r1, #'E'
 	loadn r2, #1
 	add r3, r1, r2
 	loadn r0, #10
 	outchar r3, r0		; Printa F na linha 10
 	
 	; Teste do Sub
-	loadn r1, #'G'
+	loadn r1, #'H'
 	loadn r2, #1
 	sub r3, r1, r2
 	loadn r0, #12
@@ -56,7 +56,7 @@
 	loadn r1, #3
 	loadn r2, #2
 	mul r3, r1, r2
-	loadn r4, #'H'
+	loadn r4, #'B'
 	add r3, r4, r3
 	loadn r0, #14
 	outchar r3, r0		; Printa H na linha 14
@@ -65,14 +65,14 @@
 	loadn r1, #6
 	loadn r2, #2
 	div r3, r1, r2
-	loadn r4, #'I'
+	loadn r4, #'F'
 	add r3, r4, r3
 	loadn r0, #16
 	outchar r3, r0		; Printa I na linha 16
 
 	; Teste do Inc / Dec
 	loadn r0, #18
-	loadn r3, #'J'
+	loadn r3, #'K'
 	inc r3
 	dec r3
 	dec r3
@@ -82,7 +82,7 @@
 	loadn r1, #254
 	loadn r2, #5
 	and r3, r1, r2
-	loadn r4, #'K'
+	loadn r4, #'G'
 	add r3, r4, r3
 	loadn r0, #20
 	outchar r3, r0		; Printa K na linha 20
@@ -91,7 +91,7 @@
 	loadn r1, #4
 	loadn r2, #3
 	or r3, r1, r2
-	loadn r4, #'L'
+	loadn r4, #'E'
 	add r3, r4, r3
 	loadn r0, #22
 	outchar r3, r0		; Printa L na linha 22
@@ -100,17 +100,11 @@
 	loadn r1, #5
 	loadn r2, #3
 	xor r3, r1, r2
-	loadn r4, #'M'
+	loadn r4, #'G'
 	add r3, r4, r3
 	loadn r0, #24
 	outchar r3, r0		; Printa M na linha 24
 	
-	; Teste do addn com caractere
-	loadn r0, #0
-	loadn r1, #0		
-	addn r1, r1, #'Z'
-	outchar r1, r0	
-
 	; Teste do CMP e JMP
 	loadn r0, #26
 	loadn r1, #5
@@ -124,16 +118,20 @@
 Maior:
 	outchar r4, r0		; Printa N na linha 26
 	jmp SaiJMP
+
 	
 SaiJMP:
-
-	; Teste do CALL e RTS
+	; Teste do ADDN N + char
 	loadn r0, #28
-	loadn r1, #5
-	loadn r2, #3
-	loadn r3, #'O'
-	loadn r4, #'X'
-	cmp r1, r2
+	loadn r1, #2		
+	addn r1, r1, #'N'
+	outchar r1, r0	
+
+	; Teste do ADDN char + N
+	loadn r1, #'N'
+	addn r3, r1, #3
+	loadn r0, #10
+	outchar r3, r0
 	
 Fim:	
 	halt
