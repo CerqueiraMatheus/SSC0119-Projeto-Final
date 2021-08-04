@@ -7,6 +7,8 @@ main:
 	call cria_jogador
 	call cria_tabuleiro
 	
+	call imprime_tela
+	
 	load r0, NENHUM
 
 main__loop:
@@ -601,6 +603,81 @@ checa_vencedor__fim:
 	rts
 
 
+; Tela
+
+; Parâmetros:
+; r0 - string
+; r1 - coordenada
+; r2 - cor
+imprime_sring:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	push r4
+	
+	loadn r3, #'\0'					;
+									;
+imprime_sring__loop:				; enquanto *string != '\0':
+	loadi r4, r0					;
+	cmp r3, r4						;
+	jeq imprime_sring__fim			;
+									;
+	add r4, r4, r2					;
+	outchar r4, r1					;     saída(*string + cor, coordenada)
+									;
+	inc r0							;     string++
+	inc r1							;     coordenada++
+	jmp imprime_sring__loop			;
+	
+imprime_sring__fim:
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+imprime_tela:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	push r4
+	push r5
+	
+	loadn r0, #TELA_0				; string := &TELA_0
+	loadn r1, #0					; coordenada := 0
+	load r2, BRANCO					;
+									;
+	load r3, TAMANHO_TELA			;
+	loadn r4, #41					;
+	loadn r5, #40					;
+									;
+imprime_tela__loop:					; repita:
+	call imprime_sring				;     imprime_string(string, coordenada, cor)
+									;
+	add r0, r0, r4					;     string += 41
+	add r1, r1, r5					;     coordenada += 40
+									;
+	cmp r1, r3						;
+	jle imprime_tela__loop			; enquanto coordenada < TAMANHO_TELA
+
+imprime_tela__fim:
+	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
 ; Variáveis
 
 rodada : var #1
@@ -648,3 +725,40 @@ static FALSO, #0
 
 VERDADEIRO : var #1
 static VERDADEIRO, #1
+
+BRANCO : var #1
+static BRANCO, #0
+
+TAMANHO_TELA : var #1
+static TAMANHO_TELA, #1200
+
+TELA_0  : string "             Jogo da Velha!             "
+TELA_1  : string "                                        "
+TELA_2  : string "  +-----------+          +-----------+  "
+TELA_3  : string "  | Vez do:   |          | Pontuacao |  "
+TELA_4  : string "  |           |          |     -     |  "
+TELA_5  : string "  +-----------+          +-----------+  "
+TELA_6  : string "                                        "
+TELA_7  : string "                                        "
+TELA_8  : string "              ||        ||              "
+TELA_9  : string "              ||        ||              "
+TELA_10 : string "              ||        ||              "
+TELA_11 : string "              ||        ||              "
+TELA_12 : string "              ||        ||              "
+TELA_13 : string "            7 ||      8 ||      9       "
+TELA_14 : string "      ========++========++========      "
+TELA_15 : string "              ||        ||              "
+TELA_16 : string "              ||        ||              "
+TELA_17 : string "              ||        ||              "
+TELA_18 : string "              ||        ||              "
+TELA_19 : string "              ||        ||              "
+TELA_20 : string "            4 ||      5 ||      6       "
+TELA_21 : string "      ========++========++========      "
+TELA_22 : string "              ||        ||              "
+TELA_23 : string "              ||        ||              "
+TELA_24 : string "              ||        ||              "
+TELA_25 : string "              ||        ||              "
+TELA_26 : string "              ||        ||              "
+TELA_27 : string "            1 ||      2 ||      3       "
+TELA_28 : string "                                        "
+TELA_29 : string "                                        "
