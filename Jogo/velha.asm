@@ -12,6 +12,8 @@ main:
 	load r0, NENHUM
 
 main__loop:
+	call imprime_jogador
+	
 	call executa_jogada
 	
 	call checa_vencedor
@@ -26,23 +28,8 @@ main__loop:
 main__fim:
 	call atualiza_pontos
 
-	load r0, vencedor
-	loadn r1, #0
-	outchar r0, r1
-	
-	load r0, pontos_x
-	loadn r1, #'0'
-	add r0, r0, r1
-	loadn r1, #1
-	outchar r0, r1
-	
-	load r0, pontos_o
-	loadn r1, #'0'
-	add r0, r0, r1
-	loadn r1, #2
-	outchar r0, r1
-
-	halt
+	call le_caractere
+	jmp main
 
 
 ; Caractere
@@ -186,6 +173,34 @@ troca_jogador:
 									;
 troca_jogador__fim:					;
 	store jogador, r1				; jogador := novo
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+imprime_jogador:
+	push fr
+	push r0
+	push r1
+	
+	load r0, jogador				;
+	load r1, O						;
+	cmp r0, r1						;
+	jeq imprime_jogador__o			; se jogador = X:
+									;
+	load r1, VERMELHO				;     cor := VERMELHO
+									;
+	jmp imprime_jogador__fim		;
+									;
+imprime_jogador__o:					; senão:
+	load r1, AZUL					;     cor := AZUL
+									;
+imprime_jogador__fim:				;
+	add r0, r0, r1					;
+	load r1, COORDENADA_JOGADOR		;
+	outchar r0, r1					; saída(jogador + cor, COORDENADA_JOGADOR)
 	
 	pop r1
 	pop r0
@@ -702,14 +717,16 @@ static X, #'X'
 O : var #1
 static O, #'O'
 
+VAZIO : var #1
+static VAZIO, #' '
+
+
 EMPATE : var #1
 static EMPATE, #'-'
 
 NENHUM : var #1
 static NENHUM, #' '
 
-VAZIO : var #1
-static VAZIO, #' '
 
 RODADAS : var #1
 static RODADAS, #9
@@ -717,8 +734,10 @@ static RODADAS, #9
 POSICOES : var #1
 static POSICOES, #9
 
+
 NAO_DIGITADO : var #1
 static NAO_DIGITADO, #255
+
 
 FALSO : var #1
 static FALSO, #0
@@ -726,8 +745,31 @@ static FALSO, #0
 VERDADEIRO : var #1
 static VERDADEIRO, #1
 
+
 BRANCO : var #1
 static BRANCO, #0
+
+VERMELHO : var #1
+static VERMELHO, #2304
+
+AZUL : var #1
+static AZUL, #3072
+
+
+COORDENADA_JOGADOR : var #1
+static COORDENADA_JOGADOR, #132
+
+POSICAO_PARA_COORDENADA : var #9
+static POSICAO_PARA_COORDENADA + #0, #928
+static POSICAO_PARA_COORDENADA + #1, #938
+static POSICAO_PARA_COORDENADA + #2, #948
+static POSICAO_PARA_COORDENADA + #3, #648
+static POSICAO_PARA_COORDENADA + #4, #658
+static POSICAO_PARA_COORDENADA + #5, #668
+static POSICAO_PARA_COORDENADA + #6, #368
+static POSICAO_PARA_COORDENADA + #7, #378
+static POSICAO_PARA_COORDENADA + #8, #388
+
 
 TAMANHO_TELA : var #1
 static TAMANHO_TELA, #1200
