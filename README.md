@@ -2,7 +2,7 @@
 
 > Projeto de adição da operação ADDN ao Processador ICMC e de implementação de um Jogo da Velha, componente final da avaliação de Prática em Organização de Computadores ([SSC0119](https://uspdigital.usp.br/jupiterweb/obterDisciplina?sgldis=SSC0119)), ministrada pelo professor Eduardo do Valle Simões no ICMC/USP durante o primeiro semestre de 2021.
 
-[Clique aqui para assistir ao vídeo de descrição do projeto](google.com).
+[Clique aqui para assistir ao vídeo de descrição do projeto](https://youtu.be/gBTdHCASako).
 
 ## Alterações no Processador ICMC
 
