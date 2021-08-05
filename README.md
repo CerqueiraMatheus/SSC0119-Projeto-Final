@@ -1,6 +1,8 @@
 # Projeto final de Laboratório de Organização de Computadores
 
-> Projeto de adição da operação ADDN no Processador ICMC e de implementação de um Jogo da Velha, componente final da avaliação de Prática em Organização de Computadores ([SSC0119](https://uspdigital.usp.br/jupiterweb/obterDisciplina?sgldis=SSC0119)) ministrada pelo professor Eduardo do Valle Simões no ICMC/USP durante o primeiro semestre de 2021.
+> Projeto de adição da operação ADDN ao Processador ICMC e de implementação de um Jogo da Velha, componente final da avaliação de Prática em Organização de Computadores ([SSC0119](https://uspdigital.usp.br/jupiterweb/obterDisciplina?sgldis=SSC0119)) ministrada pelo professor Eduardo do Valle Simões no ICMC/USP durante o primeiro semestre de 2021.
+
+[Clique aqui para assistir ao vídeo de descrição do projeto](google.com).
 
 ## Alterações no Processador ICMC
 
@@ -14,7 +16,7 @@ addn rx, ry, #NR
 
 No exemplo, a operação deve produzir um resultado condizente ao valor contido em ``ry`` adicionado a ``#NR``, um número qualquer informado. Por dividir a instrução, é possível adicionar um valor imediato de 16 bits, 2<sup>16</sup> - 1, ou 65.535.
 
-A descrição completa da instrução está disponível no arquivo ``Processador ICMC alterado``.
+A descrição completa da instrução está disponível no arquivo ``proc-addn.pdf``.
 
 ### Montador
 
@@ -30,12 +32,28 @@ O simulador alterado está disponibilizado sob a pasta ``/Simulador``.
 
 ## Jogo
 
-O jogo implementado em assembly para o processador ICMC foi o jogo da velha. O jogo permite que 2 jogadores se enfrentem, e a cada rodada o jogador vencedor recebe um ponto no placar. Para jogar, o usuário deve digitar um número entre 1 e 9, que representam as casas do  tabuleiro virtual.
+Foi escolhida a implementação de um Jogo da Velha para a segunda parte do projeto. Implementado em Assembly, o jogo permite que 2 jogadores se enfrentem e, a cada rodada, o jogador vencedor recebe um ponto no placar. Para jogar, o usuário deve digitar um número entre 1 e 9, que representa uma determinada casa do tabuleiro virtual.
+
+<p float="left" align="center">
+  <img src="/prints/1.png" width="500" />
+</p>
+
+<p float="left" align="center">
+  <img src="/prints/2.png" width="500" />
+</p>
+
+<p float="left" align="center">
+  <img src="/prints/3.png" width="500" />
+</p>
+
+<p float="left" align="center">
+  <img src="/prints/4.png" width="500" />
+</p>
 
 O jogo desenvolvido está disponibilizado sob a pasta ``/Jogo``.
 
 ## Desenvolvedores
 
-* [Gustavo Henrique Brunelli](https://github.com/GBrunelli) (11801053)
-* [Matheus Henrique de Cerqueira Pinto](https://github.com/CerqueiraMatheus) (11911104)
-* [Pedro Lucas de Moliner de Castro](https://github.com/pedrolmcastro) (11795784)
+[Gustavo Henrique Brunelli](https://github.com/GBrunelli) (11801053)
+[Matheus Henrique de Cerqueira Pinto](https://github.com/CerqueiraMatheus) (11911104)
+[Pedro Lucas de Moliner de Castro](https://github.com/pedrolmcastro) (11795784)
