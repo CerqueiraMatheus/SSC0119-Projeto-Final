@@ -321,12 +321,7 @@ int main() {
 
                         cpu.estado = BUSCA;
                         break;
-
-                    case ADDN:
-                        cpu.pc.incrementa = true;
-                        cpu.estado = BUSCA;
-                        break;
-
+                        
                     case POP:
 
                         cpu.estado = BUSCA;
