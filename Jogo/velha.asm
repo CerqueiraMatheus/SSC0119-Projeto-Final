@@ -2,12 +2,15 @@
 
 
 main:
-	call cria_rodada
 	call cria_pontos
+	
+main__inicio:
+	call cria_rodada
 	call cria_jogador
 	call cria_tabuleiro
 	
 	call imprime_tela
+	call imprime_pontos
 	
 	load r0, NENHUM
 
@@ -30,7 +33,7 @@ main__fim:
 	call atualiza_pontos
 
 	call le_caractere
-	jmp main
+	jmp main__inicio
 
 
 ; Caractere
@@ -436,6 +439,74 @@ atualiza_pontos__fim:						;
 	rts
 
 
+; Parâmetros:
+; r0 - pontos
+pontos_para_string:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	push r4
+	push r5
+	
+	loadn r1, #10
+	loadn r2, #'0'
+	
+	loadn r3, #string_pontos
+	loadn r4, #2
+	add r4, r3, r4
+	
+pontos_para_string__loop:
+	mod r5, r0, r1
+	add r5, r5, r2
+	storei r4, r5
+	
+	div r0, r0, r1
+	
+	dec r4
+	cmp r4, r3
+	jeg pontos_para_string__loop
+	
+	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+imprime_pontos:
+	push fr
+	push r0
+	push r1
+	push r2
+	
+	load r0, pontos_x
+	call pontos_para_string
+	
+	loadn r0, #string_pontos
+	load r1, COORDENADA_PONTOS_X
+	load r2, VERMELHO
+	call imprime_string
+	
+	load r0, pontos_o
+	call pontos_para_string
+	
+	loadn r0, #string_pontos
+	load r1, COORDENADA_PONTOS_O
+	load r2, AZUL
+	call imprime_string
+	
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
 ; Jogada
 
 executa_jogada:
@@ -728,7 +799,7 @@ checa_vencedor__fim:
 ; r0 - string
 ; r1 - coordenada
 ; r2 - cor
-imprime_sring:
+imprime_string:
 	push fr
 	push r0
 	push r1
@@ -738,19 +809,19 @@ imprime_sring:
 	
 	loadn r3, #'\0'							;
 											;
-imprime_sring__loop:						; enquanto *string != '\0':
+imprime_string__loop:						; enquanto *string != '\0':
 	loadi r4, r0							;
 	cmp r3, r4								;
-	jeq imprime_sring__fim					;
+	jeq imprime_string__fim					;
 											;
 	add r4, r4, r2							;
 	outchar r4, r1							;     saída(*string + cor, coordenada)
 											;
 	inc r0									;     string++
 	inc r1									;     coordenada++
-	jmp imprime_sring__loop					;
+	jmp imprime_string__loop				;
 	
-imprime_sring__fim:
+imprime_string__fim:
 	pop r4
 	pop r3
 	pop r2
@@ -778,7 +849,7 @@ imprime_tela:
 	loadn r5, #40							;
 											;
 imprime_tela__loop:							; repita:
-	call imprime_sring						;     imprime_string(string, coordenada, cor)
+	call imprime_string						;     imprime_string(string, coordenada, cor)
 											;
 	add r0, r0, r4							;     string += 41
 	add r1, r1, r5							;     coordenada += 40
@@ -806,6 +877,9 @@ vencedor : var #1
 pontos_x : var #1
 pontos_o : var #1
 tabuleiro : var #9
+
+string_pontos : var #4
+static string_pontos + #3, #'\0'
 
 sprite : var #1
 digito : var #1
@@ -871,6 +945,12 @@ static SPRITE_O, #16
 
 COORDENADA_JOGADOR : var #1
 static COORDENADA_JOGADOR, #132
+
+COORDENADA_PONTOS_X : var #1
+static COORDENADA_PONTOS_X, #187
+
+COORDENADA_PONTOS_O : var #1
+static COORDENADA_PONTOS_O, #193
 
 POSICAO_PARA_COORDENADA : var #9
 static POSICAO_PARA_COORDENADA + #0, #368
