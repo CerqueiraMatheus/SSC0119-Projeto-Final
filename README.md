@@ -26,7 +26,7 @@ O montador alterado está disponibilizado sob a pasta ``/Montador``.
 
 ### Simulador
 
-O simulador foi refatorado a partir do [código-fonte original](https://github.com/simoesusp/Processador-ICMC/blob/master/Simple_Simulator/simple_simulator_template.c), melhorando a modularização através da separação de arquivos, encapsulamento usando técnicas de TAD, além da renomeação de funções, constantes e variáveis, tornando mais inteligível e facilitando futuras alterações. Foi adicionado o código da operação ``ADDN`` às constantes, criado um sinal de controle para ``IMEDIATO`` no mux ``M4`` e, então, adicionada lógica para a operação no ciclo de ``BUSCA`` do processador. Para realizar a operação na ``ULA``, utilizou-se a lógica já implementada para a operação ``ADD``.
+O simulador foi refatorado a partir do [código-fonte original](https://github.com/simoesusp/Processador-ICMC/blob/master/Simple_Simulator/simple_simulator_template.c), melhorando a modularização através da separação de arquivos, encapsulamento usando técnicas de TAD, além da renomeação de funções, constantes e variáveis, tornando mais inteligível e facilitando futuras alterações. Foi adicionado o código da operação ``ADDN`` às constantes, criado um sinal de controle para ``IMEDIATO`` no mux ``M4`` e, então, adicionada lógica para a operação no ciclo de ``DECODIFICA`` do processador. Para realizar a operação na ``ULA``, utilizou-se a lógica já implementada para a operação ``ADD``.
 
 O simulador alterado está disponibilizado sob a pasta ``/Simulador``.
 
