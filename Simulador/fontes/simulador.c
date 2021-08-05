@@ -177,7 +177,7 @@ int main() {
                         cpu.mux[M4].selecao = IMEDIATO;
                         cpu.mux[M2].selecao = ULA;
                         cpu.registradores[rx].load = true;
-                        tem_carry = pega_pedaco(cpu.ir.valor, 0, 0);
+                        tem_carry = false;
                         operacao_ula = ADD;
 
                         cpu.pc.incrementa = true;
