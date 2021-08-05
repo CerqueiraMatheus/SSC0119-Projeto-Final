@@ -55,5 +55,7 @@ O jogo desenvolvido está disponibilizado sob a pasta ``/Jogo``.
 ## Desenvolvedores
 
 [Gustavo Henrique Brunelli](https://github.com/GBrunelli) (11801053)
+
 [Matheus Henrique de Cerqueira Pinto](https://github.com/CerqueiraMatheus) (11911104)
+
 [Pedro Lucas de Moliner de Castro](https://github.com/pedrolmcastro) (11795784)
