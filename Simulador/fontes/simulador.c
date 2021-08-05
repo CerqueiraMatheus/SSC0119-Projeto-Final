@@ -43,6 +43,7 @@ int main() {
         rw = LEITURA;
 
         reseta_sinais_registradores(&cpu);
+        cpu.mux[M4].selecao = 0;
 
         switch (cpu.estado) {
             case RESETA:
@@ -169,14 +170,17 @@ int main() {
                         break;
 
                     case ADDN:
-                        cpu.mux[M4].selecao = IMEDIATO;
+                        cpu.mux[M1].selecao = PC;
+                        rw = LEITURA;
+
                         cpu.mux[M3].selecao = ry;
+                        cpu.mux[M4].selecao = IMEDIATO;
                         cpu.mux[M2].selecao = ULA;
                         cpu.registradores[rx].load = true;
-                        cpu.pc.incrementa = true;
                         tem_carry = pega_pedaco(cpu.ir.valor, 0, 0);
                         operacao_ula = ADD;
 
+                        cpu.pc.incrementa = true;
                         cpu.estado = BUSCA;
                         break;
 
@@ -318,6 +322,11 @@ int main() {
                         cpu.estado = BUSCA;
                         break;
 
+                    case ADDN:
+                        cpu.pc.incrementa = true;
+                        cpu.estado = BUSCA;
+                        break;
+
                     case POP:
 
                         cpu.estado = BUSCA;
@@ -336,10 +345,6 @@ int main() {
                 break;
 
             case EXECUTA_2:
-
-                //case RTS:
-                //PC++;
-
                 cpu.estado = BUSCA;
                 break;
 
@@ -359,6 +364,10 @@ int main() {
 
         if (rw == LEITURA) {
             valor_memoria = memoria[cpu.mux[M1].valor];
+        }
+
+        if (cpu.mux[M4].selecao == IMEDIATO) {
+            cpu.mux[M4].valor = valor_memoria;
         }
 
         resultado_ula = ula(cpu.mux[M3].valor, cpu.mux[M4].valor,

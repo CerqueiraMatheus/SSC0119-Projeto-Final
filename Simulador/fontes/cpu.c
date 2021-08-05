@@ -104,8 +104,6 @@ void atualiza_mux_3(cpu_t *cpu) {
 void atualiza_mux_4(cpu_t *cpu) {
     if (cpu->mux[M4].selecao == UM) {
         cpu->mux[M4].valor = 1;
-    } else if (cpu->mux[M4].selecao == IMEDIATO) {
-        cpu->mux[M4].valor = cpu->pc.valor;
     } else {
         cpu->mux[M4].valor = cpu->registradores[cpu->mux[M4].selecao].valor;
     }

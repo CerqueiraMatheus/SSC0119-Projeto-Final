@@ -7,8 +7,8 @@
 #include "operacao.h"
 
 enum _Tipo {
-    ARITMETICA = 1,
-    LOGICA
+    LOGICA = 1,
+    ARITMETICA
 };
 
 enum _Shift {
@@ -76,8 +76,10 @@ static resultado_ula_t _operacao_aritmetica(unsigned int x, unsigned int y, int 
             } else {
                 fr[CARRY] = false;
             }
+
+            // printf("ADD VALOR %u \n", valor);
             break;
-    
+
         case SUB:
             valor = x - y;
             fr[NEGATIVO] = valor < 0;
