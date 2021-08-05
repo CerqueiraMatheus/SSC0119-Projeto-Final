@@ -2,255 +2,39 @@
 
 
 main:
-	call cria_pontos
-	
-main__inicio:
-	call cria_rodada
-	call cria_jogador
-	call cria_tabuleiro
-	
-	call imprime_tela
-	call imprime_pontos
-	
-	load r0, NENHUM
-
-main__loop:
-	call imprime_jogador
-	
-	call executa_jogada
-	call imprime_posicao
-	
-	call checa_vencedor
-	load r1, vencedor
-	cmp r0, r1
-	jne main__fim
-	
-	call proxima_rodada
-	call troca_jogador
-	jmp main__loop
-
-main__fim:
-	call imprime_vencedor
-	call atualiza_pontos
-
-	call le_caractere
-	jmp main__inicio
-
-
-; Caractere
-
-le_caractere:
-	push fr
-	push r0
-	push r1
-	
-	load r0, NAO_DIGITADO					;
+	call cria_pontos						; pontos_x, pontos_y := cria_pontos()
 											;
-le_caractere__loop:							; repita:
-	inchar r1								;     caractere := entrada()
-	cmp r0, r1								;
-	jeq le_caractere__loop					; enquanto caractere = NAO_DIGITADO
+main__inicio:								; repita:
+	call cria_rodada						;     rodada := cria_rodada()
+	call cria_jogador						;     jogador := cria_jogador()
+	call cria_tabuleiro						;     tabuleiro := cria_tabuleiro()
 											;
-	store caractere, r1						;
-	
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-; Digito
-
-checa_digito:
-	push fr
-	push r0
-	push r1
-	push r2
-	
-	load r0, FALSO							; 
-	load r1, caractere						;
+	call imprime_tela						;     imprime_tela()
+	call imprime_pontos						;     imprime_pontos(pontos_x, pontos_y)
 											;
-	loadn r2, #'1'							;
-	cmp r1, r2								; se caractere < '1':
-	jle checa_digito__fim					;     dígito_válido := FALSO
+	load r0, NENHUM							;
 											;
-	loadn r2, #'9'							; senão se caractere > '9':
-	cmp r1, r2								;     dígito_válido := FALSO
-	jgr checa_digito__fim					;
-											; senão:
-	load r0, VERDADEIRO						;     dígito_válido := VERDADEIRO
+main__loop:									;     repita:
+	call imprime_jogador					;         imprime_jogador(jogador)
 											;
-checa_digito__fim:							;
-	store digito_valido, r0					;
-	
-	pop r2
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-caractere_para_digito:
-	push fr
-	push r0
-	push r1
-	
-	load r0, caractere						;
-	loadn r1, #'0'							;
-	sub r0, r0, r1							;
-	store digito, r0						; dígito := caractere - '0'
-	
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-; Sprite
-
-carrega_sprite:
-	push fr
-	push r0
-	push r1
-	
-	load r0, jogador						;
-	load r1, X								;
-	cmp r0, r1								;
-	jne carrega_sprite__o					; se jogador = X:
+	call executa_jogada						;         executa_jogada(tabuleiro, jogador)
+	call imprime_posicao					;         imprime_posição(tabuleiro, posição)
 											;
-	load r0, SPRITE_X						;     sprite := SPRITE_X
-	jmp carrega_sprite__fim					;
+	call checa_vencedor						;         vencedor := checa_vencedor(tabuleiro, rodada)
+	load r1, vencedor						;
+	cmp r0, r1								;         se vencedor != NENHUM:
+	jne main__fim							;             saia
 											;
-carrega_sprite__o:							; senão:
-	load r0, SPRITE_O						;     sprite := SPRITE_Y
+	call proxima_rodada						;         próxima_rodada(rodada)
+	call troca_jogador						;         troca_jogador(jogador)
+	jmp main__loop							;
 											;
-carrega_sprite__fim:						;
-	store sprite, r0						;
-	
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-carrega_cor:
-	push fr
-	push r0
-	push r1
-	
-	load r0, jogador						;
-	load r1, X								;
-	cmp r0, r1								;
-	jne carrega_cor__o						; se jogador = X:
+main__fim:									;
+	call imprime_vencedor					;    imprime_vencedor(vencedor)
+	call atualiza_pontos					;    atualiza_pontos(pontos_x, pontos_y, vencedor)
 											;
-	load r0, VERMELHO						;     cor := VERMELHO
-	jmp carrega_cor__fim					;
-											;
-carrega_cor__o:								; senão
-	load r0, AZUL							;     cor := AZUL
-											;
-carrega_cor__fim:							;
-	store cor, r0							;
-	
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-; Posição
-
-checa_posicao:
-	push fr
-	push r0
-	push r1
-	push r2
-	
-	load r0, FALSO							; posição_válida := FALSO
-											;
-	loadn r1, #tabuleiro					;
-	load r2, posicao						;
-	add r1, r1, r2							;
-	loadi r1, r1							; casa := tabuleiro[posição]
-											;
-	load r2, VAZIO							;
-	cmp r1, r2								; se casa != VAZIO:
-	jne checa_posicao__fim					;     posição_válida := FALSO
-											; senão:
-	load r0, VERDADEIRO						;     posição_válida := VERDADEIRO
-	
-checa_posicao__fim:
-	store posicao_valida, r0
-	
-	pop r2
-	pop r1
-	pop r0
-	pop fr
-	rts
-
-
-digito_para_posicao:
-	push fr
-	push r0
-	
-	load r0, digito							;
-	dec r0									;
-	store posicao, r0						; posição := dígito - 1
-	
-	pop r0
-	pop fr
-	rts
-
-
-imprime_posicao:
-	push fr
-	push r0
-	push r1
-	push r2
-	push r3
-	
-	call carrega_sprite						; sprite := carrega_sprite(jogador)
-	load r0, sprite							;
-											;
-	call carrega_cor						; cor := carrega_cor(jogador)
-	load r1, cor							;
-	add r0, r0, r1							;
-											;
-	loadn r1, #POSICAO_PARA_COORDENADA		;
-	load r2, posicao						;
-	add r1, r1, r2							;
-	loadi r1, r1							; coordenada := POSIÇÃO_PARA_COORDENADA[posição]
-											;
-	loadn r2, #37							;
-	loadn r3, #160							;
-	add r3, r3, r1							; última := coordenada + 160
-											;
-imprime_posicao__loop:						; repita:
-	outchar r0, r1							;     saída(sprite + cor, coordenada)
-	inc r0									;     sprite++
-	inc r1									;     coordenada++
-											;
-	outchar r0, r1							;     saída(sprite + cor, coordenada)
-	inc r0									;     sprite++
-	inc r1									;     coordenada++
-											;
-	outchar r0, r1							;     saída(sprite + cor, coordenada)
-	inc r0									;     sprite++
-	inc r1									;     coordenada++
-											;
-	outchar r0, r1							;     saída(sprite + cor, coordenada)
-	inc r0									;     sprite++
-											;
-	add r1, r1, r2							;     coordenada += 37
-	cmp r1, r3								;
-	jle imprime_posicao__loop				; enquanto coordenada < última
-	
-	pop r3
-	pop r2
-	pop r1
-	pop r0
-	pop fr
-	rts
+	call le_caractere						;    le_caractere()
+	jmp main__inicio						;
 
 
 ; Jogador
@@ -355,6 +139,101 @@ preenche_tabuleiro:
 	load r1, jogador						;
 	storei r0, r1							; *casa = jogador
 	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+; Posição
+
+checa_posicao:
+	push fr
+	push r0
+	push r1
+	push r2
+	
+	load r0, FALSO							; posição_válida := FALSO
+											;
+	loadn r1, #tabuleiro					;
+	load r2, posicao						;
+	add r1, r1, r2							;
+	loadi r1, r1							; casa := tabuleiro[posição]
+											;
+	load r2, VAZIO							;
+	cmp r1, r2								; se casa != VAZIO:
+	jne checa_posicao__fim					;     posição_válida := FALSO
+											; senão:
+	load r0, VERDADEIRO						;     posição_válida := VERDADEIRO
+	
+checa_posicao__fim:
+	store posicao_valida, r0
+	
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+digito_para_posicao:
+	push fr
+	push r0
+	
+	load r0, digito							;
+	dec r0									;
+	store posicao, r0						; posição := dígito - 1
+	
+	pop r0
+	pop fr
+	rts
+
+
+imprime_posicao:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	
+	call carrega_sprite						; sprite := carrega_sprite(jogador)
+	load r0, sprite							;
+											;
+	call carrega_cor						; cor := carrega_cor(jogador)
+	load r1, cor							;
+	add r0, r0, r1							;
+											;
+	loadn r1, #POSICAO_PARA_COORDENADA		;
+	load r2, posicao						;
+	add r1, r1, r2							;
+	loadi r1, r1							; coordenada := POSIÇÃO_PARA_COORDENADA[posição]
+											;
+	loadn r2, #37							;
+	loadn r3, #160							;
+	add r3, r3, r1							; última := coordenada + 160
+											;
+imprime_posicao__loop:						; repita:
+	outchar r0, r1							;     saída(sprite + cor, coordenada)
+	inc r0									;     sprite++
+	inc r1									;     coordenada++
+											;
+	outchar r0, r1							;     saída(sprite + cor, coordenada)
+	inc r0									;     sprite++
+	inc r1									;     coordenada++
+											;
+	outchar r0, r1							;     saída(sprite + cor, coordenada)
+	inc r0									;     sprite++
+	inc r1									;     coordenada++
+											;
+	outchar r0, r1							;     saída(sprite + cor, coordenada)
+	inc r0									;     sprite++
+											;
+	add r1, r1, r2							;     coordenada += 37
+	cmp r1, r3								;
+	jle imprime_posicao__loop				; enquanto coordenada < última
+	
+	pop r3
+	pop r2
 	pop r1
 	pop r0
 	pop fr
@@ -542,6 +421,42 @@ executa_jogada__loop:						; repita:
 
 
 ; Vencedor
+
+checa_vencedor:
+	push fr
+	push r0
+	push r1
+	
+	load r0, NENHUM							;
+											;
+	call checa_linhas						; vencedor := checa_linhas(tabuleiro)
+	load r1, vencedor						;
+	cmp r0, r1								;
+	jne checa_vencedor__fim					; se vencedor != NENHUM:
+											;
+	call checa_colunas						;     vencedor := checa_colunas(tabuleiro)
+	load r1, vencedor						;
+	cmp r0, r1								;
+	jne checa_vencedor__fim					; se vencedor != NENHUM:
+											;
+	call checa_diagonal_1					;     vencedor := checa_diagonal_1(tabuleiro)
+	load r1, vencedor						;
+	cmp r0, r1								;
+	jne checa_vencedor__fim					; se vencedor != NENHUM:
+											;
+	call checa_diagonal_2					;     vencedor := checa_diagonal_2(tabuleiro)
+	load r1, vencedor						;
+	cmp r0, r1								;
+	jne checa_vencedor__fim					; se vencedor != NENHUM:
+											;
+	call checa_rodada						;     vencedor := checa_rodada(tabuleiro)
+	
+checa_vencedor__fim:
+	pop r1
+	pop r0
+	pop fr
+	rts
+
 
 checa_linhas:
 	push fr
@@ -758,41 +673,6 @@ checa_rodada__fim:							;
 	pop fr
 	rts
 
-checa_vencedor:
-	push fr
-	push r0
-	push r1
-	
-	load r0, NENHUM							;
-											;
-	call checa_linhas						; vencedor := checa_linhas(tabuleiro)
-	load r1, vencedor						;
-	cmp r0, r1								;
-	jne checa_vencedor__fim					; se vencedor != NENHUM:
-											;
-	call checa_colunas						;     vencedor := checa_colunas(tabuleiro)
-	load r1, vencedor						;
-	cmp r0, r1								;
-	jne checa_vencedor__fim					; se vencedor != NENHUM:
-											;
-	call checa_diagonal_1					;     vencedor := checa_diagonal_1(tabuleiro)
-	load r1, vencedor						;
-	cmp r0, r1								;
-	jne checa_vencedor__fim					; se vencedor != NENHUM:
-											;
-	call checa_diagonal_2					;     vencedor := checa_diagonal_2(tabuleiro)
-	load r1, vencedor						;
-	cmp r0, r1								;
-	jne checa_vencedor__fim					; se vencedor != NENHUM:
-											;
-	call checa_rodada						;     vencedor := checa_rodada(tabuleiro)
-	
-checa_vencedor__fim:
-	pop r1
-	pop r0
-	pop fr
-	rts
-
 
 imprime_vencedor:
 	push fr
@@ -834,7 +714,118 @@ imprime_vencedor__fim:
 	rts
 
 
+; Sprite
+
+carrega_sprite:
+	push fr
+	push r0
+	push r1
+	
+	load r0, jogador						;
+	load r1, X								;
+	cmp r0, r1								;
+	jne carrega_sprite__o					; se jogador = X:
+											;
+	load r0, SPRITE_X						;     sprite := SPRITE_X
+	jmp carrega_sprite__fim					;
+											;
+carrega_sprite__o:							; senão:
+	load r0, SPRITE_O						;     sprite := SPRITE_Y
+											;
+carrega_sprite__fim:						;
+	store sprite, r0						;
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+carrega_cor:
+	push fr
+	push r0
+	push r1
+	
+	load r0, jogador						;
+	load r1, X								;
+	cmp r0, r1								;
+	jne carrega_cor__o						; se jogador = X:
+											;
+	load r0, VERMELHO						;     cor := VERMELHO
+	jmp carrega_cor__fim					;
+											;
+carrega_cor__o:								; senão
+	load r0, AZUL							;     cor := AZUL
+											;
+carrega_cor__fim:							;
+	store cor, r0							;
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
 ; Tela
+
+imprime_tela:
+	push fr
+	push r0
+	push r1
+	push r2
+	push r3
+	push r4
+	push r5
+	
+	loadn r0, #TELA_0						; string := &TELA_0
+	loadn r1, #0							; coordenada := 0
+	load r2, BRANCO							;
+											;
+	load r3, COORDENADAS					;
+	loadn r4, #41							;
+	loadn r5, #40							;
+											;
+imprime_tela__loop:							; repita:
+	call imprime_string						;     imprime_string(string, coordenada, cor)
+											;
+	add r0, r0, r4							;     string += 41
+	add r1, r1, r5							;     coordenada += 40
+											;
+	cmp r1, r3								;
+	jle imprime_tela__loop					; enquanto coordenada < COORDENADAS
+
+imprime_tela__fim:
+	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+; Caractere
+
+le_caractere:
+	push fr
+	push r0
+	push r1
+	
+	load r0, NAO_DIGITADO					;
+											;
+le_caractere__loop:							; repita:
+	inchar r1								;     caractere := entrada()
+	cmp r0, r1								;
+	jeq le_caractere__loop					; enquanto caractere = NAO_DIGITADO
+											;
+	store caractere, r1						;
+	
+	pop r1
+	pop r0
+	pop fr
+	rts
+
 
 ; Parâmetros:
 ; r0 - string
@@ -872,37 +863,47 @@ imprime_string__fim:
 	rts
 
 
-imprime_tela:
+; Digito
+
+checa_digito:
 	push fr
 	push r0
 	push r1
 	push r2
-	push r3
-	push r4
-	push r5
 	
-	loadn r0, #TELA_0						; string := &TELA_0
-	loadn r1, #0							; coordenada := 0
-	load r2, BRANCO							;
+	load r0, FALSO							; 
+	load r1, caractere						;
 											;
-	load r3, TAMANHO_TELA					;
-	loadn r4, #41							;
-	loadn r5, #40							;
+	loadn r2, #'1'							;
+	cmp r1, r2								; se caractere < '1':
+	jle checa_digito__fim					;     dígito_válido := FALSO
 											;
-imprime_tela__loop:							; repita:
-	call imprime_string						;     imprime_string(string, coordenada, cor)
+	loadn r2, #'9'							; senão se caractere > '9':
+	cmp r1, r2								;     dígito_válido := FALSO
+	jgr checa_digito__fim					;
+											; senão:
+	load r0, VERDADEIRO						;     dígito_válido := VERDADEIRO
 											;
-	add r0, r0, r4							;     string += 41
-	add r1, r1, r5							;     coordenada += 40
-											;
-	cmp r1, r3								;
-	jle imprime_tela__loop					; enquanto coordenada < TAMANHO_TELA
-
-imprime_tela__fim:
-	pop r5
-	pop r4
-	pop r3
+checa_digito__fim:							;
+	store digito_valido, r0					;
+	
 	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
+caractere_para_digito:
+	push fr
+	push r0
+	push r1
+	
+	load r0, caractere						;
+	loadn r1, #'0'							;
+	sub r0, r0, r1							;
+	store digito, r0						; dígito := caractere - '0'
+	
 	pop r1
 	pop r0
 	pop fr
@@ -911,92 +912,75 @@ imprime_tela__fim:
 
 ; Variáveis
 
-cor : var #1
-rodada : var #1
 jogador : var #1
-vencedor : var #1
-pontos_x : var #1
-pontos_o : var #1
 tabuleiro : var #9
 
+posicao : var #1
+posicao_valida : var #1
+
+rodada : var #1
+vencedor : var #1
+
+pontos_x : var #1
+pontos_o : var #1
 string_pontos : var #4
 static string_pontos + #3, #'\0'
 
+cor : var #1
 sprite : var #1
-digito : var #1
-posicao : var #1
+
 caractere : var #1
+digito : var #1
 digito_valido : var #1
-posicao_valida : var #1
 
 
 ; Constantes
 
 X : var #1
 static X, #'X'
-
 O : var #1
 static O, #'O'
 
-VAZIO : var #1
-static VAZIO, #' '
-
-
 EMPATE : var #1
 static EMPATE, #'-'
-
 NENHUM : var #1
 static NENHUM, #' '
 
-
 RODADAS : var #1
 static RODADAS, #9
-
 POSICOES : var #1
 static POSICOES, #9
+COORDENADAS : var #1
+static COORDENADAS, #1200
 
-
+VAZIO : var #1
+static VAZIO, #' '
 NAO_DIGITADO : var #1
 static NAO_DIGITADO, #255
 
-
 FALSO : var #1
 static FALSO, #0
-
 VERDADEIRO : var #1
 static VERDADEIRO, #1
 
-
 BRANCO : var #1
 static BRANCO, #0
-
 VERMELHO : var #1
 static VERMELHO, #2304
-
 AZUL : var #1
 static AZUL, #3072
 
-
 SPRITE_X : var #1
 static SPRITE_X, #0
-
 SPRITE_O : var #1
 static SPRITE_O, #16
 
-
-STRING_VENCEDOR : string "venceu! Tecle para rejogar"
-STRING_EMPATE : string "Eh velha! Tecle para rejogar"
-
-
 COORDENADA_JOGADOR : var #1
 static COORDENADA_JOGADOR, #132
-
 COORDENADA_PONTOS_X : var #1
 static COORDENADA_PONTOS_X, #187
-
 COORDENADA_PONTOS_O : var #1
 static COORDENADA_PONTOS_O, #193
-
 COORDENADA_VENCEDOR : var #1
 static COORDENADA_VENCEDOR, #1166
 
@@ -1011,9 +995,8 @@ static POSICAO_PARA_COORDENADA + #6, #928
 static POSICAO_PARA_COORDENADA + #7, #938
 static POSICAO_PARA_COORDENADA + #8, #948
 
-
-TAMANHO_TELA : var #1
-static TAMANHO_TELA, #1200
+STRING_VENCEDOR : string "venceu! Tecle para rejogar"
+STRING_EMPATE : string "Eh velha! Tecle para rejogar"
 
 TELA_0  : string "             Jogo da Velha!             "
 TELA_1  : string "                                        "
