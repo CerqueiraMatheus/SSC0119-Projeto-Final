@@ -30,6 +30,7 @@ main__loop:
 	jmp main__loop
 
 main__fim:
+	call imprime_vencedor
 	call atualiza_pontos
 
 	call le_caractere
@@ -450,23 +451,23 @@ pontos_para_string:
 	push r4
 	push r5
 	
-	loadn r1, #10
-	loadn r2, #'0'
-	
-	loadn r3, #string_pontos
-	loadn r4, #2
-	add r4, r3, r4
-	
-pontos_para_string__loop:
-	mod r5, r0, r1
-	add r5, r5, r2
-	storei r4, r5
-	
-	div r0, r0, r1
-	
-	dec r4
-	cmp r4, r3
-	jeg pontos_para_string__loop
+	loadn r1, #10							;
+	loadn r2, #'0'							;
+											;
+	loadn r3, #string_pontos				;
+	loadn r4, #2							;
+	add r4, r3, r4							; letra := &string_pontos[2]
+											;
+pontos_para_string__loop:					; repita:
+	mod r5, r0, r1							;
+	add r5, r5, r2							;
+	storei r4, r5							;     *letra := pontos % 10 + '0'
+											;
+	div r0, r0, r1							;     pontos /= 10
+											;
+	dec r4									;     letra--
+	cmp r4, r3								;
+	jeg pontos_para_string__loop			; enquanto letra >= string_pontos
 	
 	pop r5
 	pop r4
@@ -484,21 +485,21 @@ imprime_pontos:
 	push r1
 	push r2
 	
-	load r0, pontos_x
-	call pontos_para_string
-	
-	loadn r0, #string_pontos
-	load r1, COORDENADA_PONTOS_X
-	load r2, VERMELHO
-	call imprime_string
-	
-	load r0, pontos_o
-	call pontos_para_string
-	
-	loadn r0, #string_pontos
-	load r1, COORDENADA_PONTOS_O
-	load r2, AZUL
-	call imprime_string
+	load r0, pontos_x						;
+	call pontos_para_string					; string_pontos := pontos_para_string(pontos_x)
+											;
+	loadn r0, #string_pontos				;
+	load r1, COORDENADA_PONTOS_X			;
+	load r2, VERMELHO						;
+	call imprime_string						; imprime_string(string_pontos, COORDENADA_PONTOS_X, VERMELHO)
+											;
+	load r0, pontos_o						;
+	call pontos_para_string					; string_pontos := pontos_para_string(pontos_o)
+											;
+	loadn r0, #string_pontos				;
+	load r1, COORDENADA_PONTOS_O			;
+	load r2, AZUL							;
+	call imprime_string						; imprime_string(string_pontos, COORDENADA_PONTOS_Y, AZUL)
 	
 	pop r2
 	pop r1
@@ -793,6 +794,46 @@ checa_vencedor__fim:
 	rts
 
 
+imprime_vencedor:
+	push fr
+	push r0
+	push r1
+	push r2
+	
+	load r0, vencedor						;
+	load r1, EMPATE							;
+	cmp r0, r1								;
+	jeq imprime_vencedor__empate			; se vencedor != EMPATE:
+											;
+	call carrega_cor						;     cor := carrega_cor(jogador)
+	load r1, cor							;
+	add r0, r0, r1							;
+											;
+	load r1, COORDENADA_VENCEDOR			;
+	outchar r0, r1							;     saída(vencedor + cor, COORDENADA_VENCEDOR)
+											;
+	loadn r0, #STRING_VENCEDOR				;
+	loadn r2, #2							;
+	add r1, r1, r2							;
+	load r2, BRANCO							;
+	call imprime_string						;     imprime_string(STRING_VENCEDOR, COORDENADA_VENCEDOR + 2, BRANCO)
+											;
+	jmp imprime_vencedor__fim				;
+											;
+imprime_vencedor__empate:					; senão:
+	loadn r0, #STRING_EMPATE				;
+	load r1, COORDENADA_VENCEDOR			;
+	load r2, BRANCO							;
+	call imprime_string						;     imprime_string(STRING_EMPATE, COORDENADA_VENCEDOR, BRANCO)
+
+imprime_vencedor__fim:
+	pop r2
+	pop r1
+	pop r0
+	pop fr
+	rts
+
+
 ; Tela
 
 ; Parâmetros:
@@ -943,6 +984,10 @@ SPRITE_O : var #1
 static SPRITE_O, #16
 
 
+STRING_VENCEDOR : string "venceu! Tecle para rejogar"
+STRING_EMPATE : string "Eh velha! Tecle para rejogar"
+
+
 COORDENADA_JOGADOR : var #1
 static COORDENADA_JOGADOR, #132
 
@@ -951,6 +996,9 @@ static COORDENADA_PONTOS_X, #187
 
 COORDENADA_PONTOS_O : var #1
 static COORDENADA_PONTOS_O, #193
+
+COORDENADA_VENCEDOR : var #1
+static COORDENADA_VENCEDOR, #1166
 
 POSICAO_PARA_COORDENADA : var #9
 static POSICAO_PARA_COORDENADA + #0, #368
